@@ -1,0 +1,1 @@
+    GatewayID       CreatedAt     RefNumber        VRN         BP       Excluded    Notes

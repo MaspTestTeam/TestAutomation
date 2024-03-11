@@ -1,0 +1,10 @@
+Gmail Credentials
+First Name: MASP
+Last name: Testteam
+Birthday: Jan/1/1990
+
+
+Outlook Credentials
+
+
+You can view the full front end user detail by going to https://www.qa.tax.service.gov.uk/enrolment-store-proxy-frontend/enrolments-assigned-to-user and entering the user id
