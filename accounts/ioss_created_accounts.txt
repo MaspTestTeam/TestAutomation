@@ -23,9 +23,6 @@
 66 99 12 46 83 52	16/02/2024	IM9000003046	955500574	100360635	true		self exclude reason 6
 45 78 74 29 66 84	19/02/2024	IM9000003148	889000037	100005037	false		used by tahir
 15 74 21 14 21 27	19/02/2024	IM9000003159	998877374	100377210	false		commencement date set jan 1st, excluded 1st-31st - dead acc
-56 59 47 18 04 60	19/02/2024	IM9000003161	999111024	100377220	false		commencement date set jan 1st dead acc
-72 32 37 55 34 01	19/02/2024	IM9000003170	998877380	100377225	false		commencement date set jan 1st dead acc
-29 67 60 66 12 30	19/02/2024	IM9000003181	998877381	100377243	false		commencement date set jan 1st dead acc
 50 53 30 96 61 18	19/02/2024	IM9000003192	999111025	100377267	false		rejoined as IM9000003241
 46 09 57 39 66 32	19/02/2024	IM9000003206	999111027	100377402	false		set date back 6 years back
 50 50 07 82 31 78	19/02/2024	IM9000003217	904526800	100377410	false		commencement date set to december 1st, excluded from jan 1st, expect december return not january, return for dec completed, rejoined as IM9000003363 TC27
