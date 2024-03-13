@@ -221,7 +221,8 @@ public class MainAutomationUI {
 
         try {
             // Call the executeSeleniumScript method from the other class
-            String result = seleniumScript.executeSeleniumScript(VRNValue, demoSelected);
+            // Placeholder BP number for now
+            String result = seleniumScript.executeSeleniumScript(VRNValue, "123891322", demoSelected);
 
             return "Selenium script has run! " + "\n" + result;
         } catch (Exception e) {

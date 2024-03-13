@@ -25,7 +25,7 @@ import java.util.Objects;
 // CHANGE WAIT TILL TO 45 SECONDS FOR IT TO WORK.
 // ENSURE OUTLOOK INBOX IS EMPTY BEFORE RUNNING
 // SCRIPT WILL THEN MAKE THE BTA ACCOUNT LINKED TO THE GG ACCOUNT AS LONG
-// AS A VALID vrn IS ADDED TO THE SCRIPT ON CREATION
+// AS A VALID vrn AND LINKING BP IS ADDED TO THE SCRIPT ON CREATION
 // tO CALL THE SCRIPT USE THE  MAIN FUNCTION AND PUT IN THE VARIABLES NEEDED
 // DEMO BEING TRUE WILL SLOW THE AUTOMATION DOWN TO SEE WHAT'S HAPPENING.
 // ******************************************************************
@@ -37,12 +37,13 @@ public class BTACreationWithOutlook {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String VRNValue = "888667930"; // Replace with your value
-        String result = seleniumScript.executeSeleniumScript(VRNValue, demoSelected);
+        String VRNValue = "888888909"; // Replace with your value
+        String BPValue = "100347734";   //Replace with your BP value
+        String result = seleniumScript.executeSeleniumScript(VRNValue, BPValue, demoSelected);
         System.out.println(result);
     }
 
-    public String executeSeleniumScript(String VRNValue, boolean demo) throws IOException {
+    public String executeSeleniumScript(String VRNValue, String BPValue, boolean demo) throws IOException {
         //***************************************************************
         //                  VARIABLES & .env LOADED
         //***************************************************************
@@ -365,7 +366,7 @@ public class BTACreationWithOutlook {
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String createdAt = dateTimeNow.format(dateTimeFormat);
             // Create a formatted string to save
-            String accountDetailsCreated = govGatewayID + '\t' + VRNValue + '\t' + userId + '\t' + groupId + '\t' + createdAt;
+            String accountDetailsCreated = govGatewayID + '\t' + VRNValue + '\t' + BPValue + '\t' + userId + '\t' + groupId + '\t' + createdAt;
             //write the string to the file
             buffedWriter.write(accountDetailsCreated);
             //start a new line so the next variable appended is on a new line
@@ -380,7 +381,6 @@ public class BTACreationWithOutlook {
             result += "GOV GATEWAY ID: " + govGatewayID + " VRN: " + VRNValue +"\n";
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
             return "Error occurred while scraping the website.";
         }
     }
