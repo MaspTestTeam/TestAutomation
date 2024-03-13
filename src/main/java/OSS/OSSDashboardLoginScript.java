@@ -1,4 +1,4 @@
-package IOSS;
+package OSS;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
@@ -10,26 +10,23 @@ import java.time.Duration;
 
 // ************************************************************
 // THIS SCRIPT WILL LOG INTO THE SIT ENVIRONMENT
-// cLICK THE VIEW IOSS ACCOUNT DASHBOARD AND IF THAT FAILS
-// DIRECTLY OPEN THE IOSS ACCOUNT DASHBOARD IN ANOTHER TAB
+// CLICK THE VIEW OSS ACCOUNT DASHBOARD AND IF THAT FAILS
 // ************************************************************
-public class IOSSMakeReturnScript {
+public class OSSDashboardLoginScript {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        IOSSMakeReturnScript seleniumScript = new IOSSMakeReturnScript();
+        OSSDashboardLoginScript seleniumScript = new OSSDashboardLoginScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "49 96 79 65 89 59"; // Replace with your value
-        String VRNValue = "990011242"; // Use the same VRN used in previous script rejoin IM9000002633
-        String IOSSId = "IM9000002917"; // USe the IOSS ID to save the information linked to IOSS account
-        String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, VRNValue, IOSSId);
+        String GGIDValue = "61 22 67 89 61 11"; // Replace with your value
+        String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue);
         System.out.println(result);
     }
 
 
-    public String executeSeleniumScript(boolean demo, String govGatewayID ,String VRNValue, String IOSSId) throws IOException, InterruptedException {
+    public String executeSeleniumScript(boolean demo, String govGatewayID) throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
         //***************************************************************
@@ -44,7 +41,6 @@ public class IOSSMakeReturnScript {
         String govGatewayBTAStartPoint = dotenv.get("RETURNS_URL"); // Start point to LOG INTO BTA
         String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD"); //GG account password used to create and log in
         String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");   //Code used for authentication app
-        String iossAccountLink = dotenv.get("IOSS_ACCOUNT_LINK");   //Direct link to IOSS account view
 
         //***************************************************************
         //                  CHROME DRIVER INIT
@@ -64,7 +60,6 @@ public class IOSSMakeReturnScript {
         //***************************************************************
         // Open start point URL but log in this time.
         driver.get(govGatewayBTAStartPoint);
-        //String govGatewayBTAWindowHandle = driver.getWindowHandle();
 
         //clear cookie banner if demo so screen can be seen clearer
         if (demo){
@@ -98,51 +93,15 @@ public class IOSSMakeReturnScript {
         if (demo) { Thread.sleep(waitTime); }
 
         //***************************************************************
-        //                      VIEW IOSS ACCOUNT
+        //                      VIEW OSS ACCOUNT
         //***************************************************************
         //USE HYPERLINK
-        driver.findElement(By.id("ioss-view-account")).click();
-
-        //USE DIRECT URL IN NEW TAB SO STILL SIGNED IN
-        //((JavascriptExecutor)driver).executeScript("window.open()");
-        //ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
-        //driver.switchTo().window(tabs.get(1)); //switches to new tab
-        //driver.get(iossAccountLink);
-        //String govGatewayIOSSAccountWindowHandle = driver.getWindowHandle();
-
-        //Click return link
-
-        //Do you want to start your return for January 2024?
-        //YES
-
-        //Did you make eligible sales into the EU or Northern Ireland in January 2024?
-        //Yes
-
-        //Which country did you sell to?
-
-        //Which VAT rates did you sell goods at?
-        //Pick top one
-
-        //What were your sales at x% rate excluding VAT?
-        // Send 100
-
-        //How much VAT did you charge on sales of £100 at x% VAT rate
-        //Pick top one
-
-        //Add another VAT rate - NO and confirm
-
-        //Add sales to another country?
-        //NO
-
-        //Check answers and submit
-
-        // Save data and the return ref
-
+        driver.findElement(By.id("oss-view-account")).click();
 
         // Return the input and results string
         String result = "Demo Selected: " + demo + "\n";
-        result += "IOSS MAKE RETURN SCRIPT RAN" + "\n";
-        result += "GOV GATEWAY ID: " + govGatewayID + " VRN: " + VRNValue + " IOSS ID:"+ IOSSId+"\n";
+        result += "OSS LOGIN SCRIPT RAN" + "\n";
+        result += "GOV GATEWAY ID: " + govGatewayID + "\n";
         return result;
 
     }
