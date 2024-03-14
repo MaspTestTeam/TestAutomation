@@ -30,9 +30,9 @@ public class IOSSRegistrationScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "31 70 98 07 67 56"; // Replace with your value
-        String VRNValue = "888667930"; // Use the same VRN used in previous script
-        String bpId = "100391116";  // bpID for the account created linked to vrn
+        String GGIDValue = "83 35 66 09 76 94"; // Replace with your value
+        String VRNValue = "854796584"; // Use the same VRN used in previous script
+        String bpId = "100378108";  // bpID for the account created linked to vrn
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, VRNValue, bpId);
         System.out.println(result);
     }
