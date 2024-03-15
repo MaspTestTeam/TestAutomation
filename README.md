@@ -21,6 +21,7 @@ Guides for the above prerequisites can be emailed out or found in the sharepoint
 ![ENV location](/assets/env_location.PNG)
 3. To check selenium and the chromedriver are in sync you can first run a test script -> ChromeDriverTest.Java. This is located in src/main/java/Prereqs.
 ![Test Script](assets/test_script_location.PNG)
+4. If the script does not run and Chrome cant load the page, remember to turn off service Status in Zscaler (found in your desktop tray). Use 'HMRC sit enviro' as the reason.
 
 
 ## Using the scripts
