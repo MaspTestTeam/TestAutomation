@@ -67,7 +67,7 @@ public class ChromeDriverTest {
             }
 
             // Return the input and results string
-            return "TEST" + VRNValue;
+            return "TEST -> VRN " + VRNValue;
         } catch (Exception e) {
             return "Error occurred while scraping the website.";
         }
