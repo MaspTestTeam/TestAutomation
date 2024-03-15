@@ -55,6 +55,7 @@ public class BTACreationWithOutlook {
         String authenticatorName = dotenv.get("AUTHENTICATOR_NAME");    //Name for authentication app
         String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");   //Code used for authentication app
         String btaUserDetailsUrl = dotenv.get("BTA_USER_DETAILS_URL");  //Point to get userId/ group ID for users GG account
+        String outlookEmailUrl = dotenv.get("OUTLOOK_EMAIL_URL");    //Url for Outlook email auto log in
         String btaCreationUrl = dotenv.get("BTA_CREATION_URL"); //URL used to create a BTA account using the back end
 
         // Variables scraped from sites/email needed
@@ -145,7 +146,7 @@ public class BTACreationWithOutlook {
             driver.switchTo().newWindow(WindowType.WINDOW);
             String outlookWindowHandle = driver.getWindowHandle();
             //OUTLOOK LOG IN
-            driver.get("https://login.live.com/login.srf?wa=wsignin1.0&rpsnv=19&ct=1704283323&rver=7.0.6738.0&wp=MBI_SSL&wreply=https%3a%2f%2foutlook.live.com%2fowa%2f%3fcobrandid%3dab0455a0-8d03-46b9-b18b-df2f57b9e44c%26nlp%3d1%26deeplink%3dowa%252f%26RpsCsrfState%3d869e1e54-d4c5-e519-f08a-0d1bb9063d44&id=292841&aadredir=1&CBCXT=out&lw=1&fl=dob%2cflname%2cwld&cobrandid=ab0455a0-8d03-46b9-b18b-df2f57b9e44c");
+            driver.get(outlookEmailUrl);
             driver.findElement(By.xpath("//*[@id=\"i0116\"]")).sendKeys(outlookEmail);
             driver.findElement(By.id("idSIButton9")).click();
             Thread.sleep(1000);
