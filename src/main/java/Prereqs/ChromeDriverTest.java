@@ -22,9 +22,7 @@ public class ChromeDriverTest {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "87 15 52 59 16 48"; // Replace with your value
         String VRNValue = "999111031"; // Use the same VRN used in previous script
-        String bpID = "100377803"; // Use this value to track the Business partner id for the BTA
         String result = seleniumScript.executeSeleniumScript(demoSelected, VRNValue);
         System.out.println(result);
     }
@@ -58,7 +56,6 @@ public class ChromeDriverTest {
             //***************************************************************
             // Open start point URL but log in this time.
             driver.get(govGatewayBTAStartPoint);
-            String govGatewayBTAWindowHandle = driver.getWindowHandle();
 
             //clear cookie banner if demo so screen can be seen clearer
             if (demo){
@@ -70,9 +67,8 @@ public class ChromeDriverTest {
             }
 
             // Return the input and results string
-            return "TEST";
+            return "TEST" + VRNValue;
         } catch (Exception e) {
-            e.printStackTrace();
             return "Error occurred while scraping the website.";
         }
     }
