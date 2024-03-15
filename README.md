@@ -9,6 +9,7 @@ Guides for the above prerequisites can be emailed out or found in the sharepoint
 
 ## Installation
 1. Create a new intellij project from version control with the [GitHub Repository](https://github.com/MaspTestTeam/TestAutomation).
+![Step 0 Image](assets/start_point_new_project.PNG)
 ![Step 1 Image](/assets/intellij_step.PNG)
 2. Press clone and wait for the build, this may take a few minutes to download and install all the relevant packages.
 3. To find all the automation scripts navigate into the main directory then into src/main/java.
