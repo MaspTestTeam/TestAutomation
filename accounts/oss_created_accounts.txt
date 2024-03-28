@@ -1,2 +1,3 @@
-    GatewayID       CreatedAt      VRN         BP       Excluded    Notes
-61 22 67 89 61 11	13/03/2024	854789654	100377681	false		Date set back to jan 1st
+    GatewayID       CreatedAt      VRN         BP       Excluded     FE             Notes
+61 22 67 89 61 11	13/03/2024	854789654	100377681	false		false        Date set back to jan 1st
+21 39 10 08 57 15	28/03/2024	833311170	100347880	false		ATU12345678     none
