@@ -1,5 +1,5 @@
 # READ ME
-This automation set up can not be done on HMRC laptops. 
+This automation set up can not be done on Stride laptops. 
 ## Pre requisites
 1. Intellij Set up
 2. OpenVPN set up
