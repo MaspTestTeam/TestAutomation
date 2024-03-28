@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 // ******************************************************************
-// SCRIPT WILL REGISTER TO IOSS SERVICE AND SAVE DETAILS OF REGISTRATION
+// SCRIPT WILL REGISTER TO IOSS SERVICE WITH A FIXED ESTABLISHMENT AND SAVE DETAILS OF REGISTRATION
 // YOU NEED GOV GATEWAY ID, VRN AND BP FOR AN ACCOUNT TO BEGIN CREATION
 // THE VARIABLES NEEDED ARE A GG ACCOUNT WITH BTA ACCOUNT (use BTACreationWithOutlook to make BTA)
 // VRN AND BTA MUST BE VALID TO ALLOW IOSS CREATION
@@ -23,21 +24,23 @@ import java.time.format.DateTimeFormatter;
 // DEMO BEING TRUE WILL SLOW THE AUTOMATION DOWN TO SEE WHAT'S HAPPENING.
 // THIS WILL OUTPUT A FILE THAT PRINTS OUT DETAILS FOR A NEW IOSS ACCOUNT
 // ******************************************************************
-public class IOSSRegistrationScript {
+public class IOSSRegistrationWithFeScript {
     public static void main(String[] args) throws IOException, InterruptedException {
-        IOSSRegistrationScript seleniumScript = new IOSSRegistrationScript();
+        IOSSRegistrationWithFeScript seleniumScript = new IOSSRegistrationWithFeScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "21 39 10 08 57 15"; // Replace with your value
-        String VRNValue = "833311170"; // Use the same VRN used in previous script
-        String bpId = "100347880";  // bpID for the account created linked to vrn
-        String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, VRNValue, bpId);
+        String GGIDValue = "75 46 24 97 58 71"; // Replace with your value
+        String VRNValue = "904529396"; // Use the same VRN used in previous script
+        String bpId = "100390314";  // bpID for the account created linked to vrn
+        String FeCountry = "Austria"; // The country your using as fixed establishment
+        String FeVATNumber = "ATU12345678"; // The VAT number used to register in the FE country
+        String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, VRNValue, bpId, FeCountry, FeVATNumber);
         System.out.println(result);
     }
 
-    public String executeSeleniumScript(boolean demo, String govGatewayID, String VRNvalue, String BPID) throws IOException, InterruptedException {
+    public String executeSeleniumScript(boolean demo, String govGatewayID, String VRNvalue, String BPID, String FeCountry, String FeVATNumber) throws IOException, InterruptedException {
 
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
@@ -85,7 +88,6 @@ public class IOSSRegistrationScript {
                 driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/button")).click();
                 Thread.sleep(waitTime);
             }
-
 
             //Is your business already registered for the Import One-Stop Shop scheme in an EU country?
             driver.findElement(By.id("value-no")).click();
@@ -137,9 +139,8 @@ public class IOSSRegistrationScript {
             // Skip activities
             //driver.findElement(By.id("confirm-No")).click();
             //driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
 
-//***************************************************************
+            //***************************************************************
             //REPEAT INITIAL STEPS NOW LOGGED IN TO GET TO THE RIGHT START POINT
             //***************************************************************
             driver.get(govGatewayStartPointURL);
@@ -192,10 +193,83 @@ public class IOSSRegistrationScript {
             if (demo) { Thread.sleep(waitTime); }
 
             //Is your business registered for VAT in EU countries?
-            driver.findElement(By.id("value-no")).click();
+            // Click yes
+            driver.findElement(By.id("value")).click();
             driver.findElement(By.id("continue")).click();
             if (demo) { Thread.sleep(waitTime); }
 
+            //***************************************************************
+            //                  FIXED ESTABLISHMENT DETAILS
+            //***************************************************************
+            // Enter an EU country where your business is registered for tax
+            if (demo) { Thread.sleep(waitTime); }
+            // Enter the name of the country into the input box
+            String inputCache=driver.findElement(By.id("value")).getAttribute("value");
+            if (inputCache.isEmpty()) {
+                driver.findElement(By.id("value")).sendKeys(FeCountry);
+                Thread.sleep(700);
+                // Click continue twice
+                driver.findElement(By.id("continue")).click();
+                driver.findElement(By.id("continue")).click();
+            } else{
+                // Click continue
+                driver.findElement(By.id("continue")).click();
+            }
+
+            //Does your business have a fixed establishment in XXXXXX
+            //Click yes
+            driver.findElement(By.id("value")).click();
+            if (demo) { Thread.sleep(waitTime); }
+            //Click continue
+            driver.findElement(By.id("continue")).click();
+
+            // What sort of registration do you have in XXXXXX?
+            // Click VAT number
+            driver.findElement(By.id("value_0")).click();
+            if (demo) { Thread.sleep(waitTime); }
+            // Click continue
+            driver.findElement(By.id("continue")).click();
+
+            // What is your VAT registration number for XXXXXX?
+            // Enter the VAT number in the input box
+            driver.findElement(By.id("value")).sendKeys(FeVATNumber);
+            Thread.sleep(400);
+            // Click continue
+            driver.findElement(By.id("continue")).click();
+
+            // What is your trading name in XXXXXX?
+            // Enter the Trading name
+            driver.findElement(By.id("value")).sendKeys("Fixed Establishment VATECOM");
+            Thread.sleep(400);
+            // Click continue
+            driver.findElement(By.id("continue")).click();
+
+            // What is the fixed establishment address in Austria?
+            // Address line 1
+            driver.findElement(By.id("line1")).sendKeys("16 Grove Lane");
+            //Town or City
+            if (demo) { Thread.sleep(waitTime); }
+            driver.findElement(By.id("townOrCity")).sendKeys("TEST");
+            if (demo) { Thread.sleep(waitTime); }
+            // Click continue
+            driver.findElement(By.id("continue")).click();
+
+            //Check your answers for XXXXXX
+            // Click continue
+            if (demo) { Thread.sleep(waitTime); }
+            driver.findElement(By.id("continue")).click();
+
+            // You added tax details for one EU country
+            // Add tax details for another EU country?
+            //Click no
+            driver.findElement(By.id("value-no")).click();
+            if (demo) { Thread.sleep(waitTime); }
+            // Click continue
+            driver.findElement(By.id("continue")).click();
+
+            //***************************************************************
+            //                  CONTINUE NON FE DETAILS
+            //***************************************************************
             //Enter a website you use to sell your goods
             driver.findElement(By.id("value")).sendKeys("www.testsite.com");
             Thread.sleep(500);
@@ -259,7 +333,7 @@ public class IOSSRegistrationScript {
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String createdAt = dateTimeNow.format(dateTimeFormat);
             // Create a formatted string to save
-            String accountDetailsCreated = govGatewayID + '\t' + createdAt + '\t' + refNumber + '\t' + VRNvalue + '\t' + BPID +"\t" + "false" + '\t'+'\t' + "false" + '\t'+'\t'+"none";
+            String accountDetailsCreated = govGatewayID + '\t' + createdAt + '\t' + refNumber + '\t' + VRNvalue + '\t' + BPID +"\t" + "false" + '\t'+'\t' + FeVATNumber + '\t'+'\t'+"none";
             //write the string to the file
             buffedWriter.write(accountDetailsCreated);
             //start a new line so the next variable appended is on a new line

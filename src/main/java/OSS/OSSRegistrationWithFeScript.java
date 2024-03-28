@@ -184,6 +184,9 @@ public class OSSRegistrationWithFeScript {
         // Click continue
         driver.findElement(By.id("continue")).click();
 
+        //***************************************************************
+        //                  FIXED ESTABLISHMENT DETAILS
+        //***************************************************************
         // Enter an EU country where your business is registered for tax
         if (demo) { Thread.sleep(waitTime); }
         // Enter the name of the country into the input box
@@ -251,6 +254,9 @@ public class OSSRegistrationWithFeScript {
         // Click continue
         driver.findElement(By.id("continue")).click();
 
+        //***************************************************************
+        //                  CONTINUE NON FE DETAILS
+        //***************************************************************
         // Do other businesses sell goods on your website or app?
         // Click yes
         driver.findElement(By.id("value")).click();
