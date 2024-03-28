@@ -1,8 +1,4 @@
     GatewayID       CreatedAt     RefNumber        VRN         BP       Excluded      FE            Notes
 28 22 36 72 45 08   08/01/2024  IM9000001754    904514547   100393540   false       false       Reason 1 - Test Case 8 - return filled - rejoin IM9000002713
 44 01 82 42 29 77	24/01/2024	IM9000002087	904526812	100378656   true		false       Reason 2  - Test case 9 - return filled - rejoin IM9000002702
-58 83 76 11 05 12	29/01/2024	IM9000002214	904526808	100378651	true		false       Reason 3 - test case 10 - return filled - rejoin IM9000002724
-13 82 76 24 61 20	29/01/2024	IM9000002269	998877337	100365829	true		false       Reason 4 - test case 11 - no return  filled - rejoin IM9000002781
-78 00 35 17 14 46	29/01/2024	IM9000002247	904526285	100349122	true		false       Reason 5 - test case 12 - return filled - rejoin IM9000002757
-38 60 14 14 93 98	29/01/2024	IM9000002258	998877261	100362084	true		false       Reason 6 - test case 13 - return filled - rejoin IM9000002746
 85 48 22 53 42 71	28/03/2024	IM9000004107	888666247	100390199	false		ATU12345678		none
