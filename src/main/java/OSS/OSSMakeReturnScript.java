@@ -251,7 +251,6 @@ public class OSSMakeReturnScript {
             driver.findElement(By.id("continue")).click();
         }
 
-        // https://www.qa.tax.service.gov.uk/pay-vat-on-goods-sold-to-eu/northern-ireland-returns-payments/2023-Q1/return-submitted
         //***************************************************************
         //                     SAVE RETURN DETAILS
         //***************************************************************
