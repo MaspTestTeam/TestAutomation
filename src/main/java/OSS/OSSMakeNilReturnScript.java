@@ -3,6 +3,7 @@ package OSS;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.io.FileHandler;
 
 import java.io.BufferedWriter;
@@ -14,6 +15,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+// ********************************************************************
+// THIS SCRIPT WILL MAKE A NIL RETURN
+// yOU MUST HAVE THE GOV GATEWAY ID TO MAKE THE RETURN
+// THE ACCOUNT MUST HAVE OUTSTANDING RETURNS TO WORK
+// THE ACCOUNT CAN HAVE ONE OR MULTIPLE OUTSTANDING RETURN
+// THE SCRIPT WILL AUTOMATICALLY COMPLETE THE EARLIEST OUTSTANDING RETURN
+// THE RETURN REFERENCE WILL BE SAVED  TO A FILE IN THE EVIDENCE FOLDERS
+// ********************************************************************
 public class OSSMakeNilReturnScript {
 
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -21,8 +30,8 @@ public class OSSMakeNilReturnScript {
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
-        boolean demoSelected = true; // Replace with your value
-        String GGIDValue = "38 60 23 92 30 01"; // Replace with your value
+        boolean demoSelected = false; // Replace with your value
+        String GGIDValue = "37 61 28 22 51 24"; // Replace with your value
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue);
         System.out.println(result);
     }
@@ -33,9 +42,9 @@ public class OSSMakeNilReturnScript {
         //***************************************************************
         System.setProperty("webdriver.chrome.driver", "resources/chromedriver.exe");
         // Initialize the WebDriver (in this case, using Chrome)
-        WebDriver driver = new ChromeDriver();
-        // Maximize the window
-        driver.manage().window().maximize();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments( "incognito");
+        WebDriver driver = new ChromeDriver(options);
         // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
 
@@ -57,11 +66,12 @@ public class OSSMakeNilReturnScript {
         String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD");
         String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");
 
+
         //***************************************************************
         //                  FILE READER AND WRITER INIT
         //***************************************************************
         //filepath to be edited
-        String filepath ="evidence/returns/return_references.txt";
+        String filepath ="evidence/OSS/Returns/return_references.txt";
         File file = new File(filepath);
         //class to write to the file loaded
         FileWriter fileWriter = new FileWriter(file, true);
@@ -76,8 +86,6 @@ public class OSSMakeNilReturnScript {
         //***************************************************************
         // Open Start point URL
         driver.get(returnsURL);
-        // Get the current window handle
-        //String returnsWindowHandle = driver.getWindowHandle();
 
         // Log in to gov gateway account
         if (demo) { Thread.sleep(waitTime); }
@@ -94,139 +102,20 @@ public class OSSMakeNilReturnScript {
         driver.findElement(By.id("oss-start-return")).click();
         if (demo) { Thread.sleep(waitTime); }
 
-        // Do you want to start your return for 1 January to 31 March 2023?
+        // Do you want to start your return?
         // Click yes
         driver.findElement(By.id("value")).click();
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("continue")).click();
 
         // Did you make eligible sales from Northern Ireland to the EU during this period?
-        // Click yes
-        driver.findElement(By.id("value")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // Which country did you sell to from Northern Ireland?
-        // Check input is empty before typing in another value - this is filled if been completed before.
-        WebElement countrySoldToInput = driver.findElement(By.id("value"));
-        if ((countrySoldToInput.getAttribute("value").isEmpty()))
-        {
-            System.out.println("Country value is EMPTY");
-            driver.findElement(By.id("value")).sendKeys("Portugal");
-            if (demo) { Thread.sleep(waitTime); }
-            // Double click needed
-            driver.findElement(By.id("continue")).click();
-            driver.findElement(By.id("continue")).click();
-        }else {
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
-
-        // Which VAT rates did you charge?
-        // Click just top value
-        driver.findElement(By.id("value_0")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // What were your sales at xx% rate excluding VAT?
-        driver.findElement(By.id("value")).sendKeys("5000.00");
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // How much VAT did you charge on sales of £5,000 at xx% VAT rate?
-        driver.findElement(By.id("value_0")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // Check your answers
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // Add sales from Northern Ireland to another EU country?
-        // Click no
+        // Click No
         driver.findElement(By.id("value-no")).click();
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("continue")).click();
 
         // Did you make eligible sales from an EU country to other EU countries during this period?
-        // Click yes
-        driver.findElement(By.id("value")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // Which EU country did you sell goods from?
-        WebElement countrySellFromInput = driver.findElement(By.id("value"));
-        // Check input is empty before typing in another value - this is filled if been completed before.
-        if ((countrySellFromInput.getAttribute("value").isEmpty()))
-        {
-            System.out.println("Country value is EMPTY");
-            driver.findElement(By.id("value")).sendKeys("Finland");
-            if (demo) { Thread.sleep(waitTime); }
-            // Double click needed
-            driver.findElement(By.id("continue")).click();
-            driver.findElement(By.id("continue")).click();
-        } else{
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
-
-        // Where did you sell to from Finland? Pick any country except NI
-        WebElement countrySoldTo2Input = driver.findElement(By.id("value"));
-        // Check input is empty before typing in another value - this is filled if been completed before.
-        if ((countrySoldTo2Input.getAttribute("value").isEmpty()))
-        {
-            System.out.println("Country value is EMPTY");
-            driver.findElement(By.id("value")).sendKeys("Sweden");
-            if (demo) { Thread.sleep(waitTime); }
-            // Double click needed
-            driver.findElement(By.id("continue")).click();
-            driver.findElement(By.id("continue")).click();
-        } else {
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
-
-        // Which VAT rates did you charge?
-        // Click just top value
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"value_0\"]"));
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // What were your sales at xx% rate excluding VAT?
-        List<WebElement> taxSalesInput = driver.findElements(By.id("value"));
-        // If input box found then input a value of taxable sales
-        if (!taxSalesInput.isEmpty()){
-            System.out.println("Input for return on second country needed");
-            driver.findElement(By.id("value")).sendKeys("3000.00");
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-
-            // How much VAT did you charge on sales of £3,000 at 25% VAT rate?
-            driver.findElement(By.id("value_0")).click();
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-
-            // Check your answers
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-
-        } else{
-            // ****************** CACHING INPUT HERE
-            System.out.println("No input box on page for second return");
-            // Check your answers
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
-
-        // Add sales from Finland to another EU country?
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("value-no")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // Add sales from another EU country?
-        // Click no
+        // Click No
         driver.findElement(By.id("value-no")).click();
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("continue")).click();
@@ -236,22 +125,16 @@ public class OSSMakeNilReturnScript {
         // Check for inputs on this page and if there are then click no, otherwise carry on
         List<WebElement> previousReturnInputs = driver.findElements(By.id("value-no"));
         if (!previousReturnInputs.isEmpty()){
-            System.out.println("Do you want to correct a previous return? Page Loaded");
             driver.findElement(By.id("value-no")).click();
             if (demo) { Thread.sleep(waitTime); }
             driver.findElement(By.id("continue")).click();
-            // Check your answers and click submit
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
-        else{
-            // Check your answers and click submit
-            System.out.println("Check your answers Page Loaded");
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
 
-        // https://www.qa.tax.service.gov.uk/pay-vat-on-goods-sold-to-eu/northern-ireland-returns-payments/2023-Q1/return-submitted
+        }
+        // Check your answers and click submit
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
+
+
         //***************************************************************
         //                     SAVE RETURN DETAILS
         //***************************************************************
@@ -261,9 +144,8 @@ public class OSSMakeNilReturnScript {
         String createdAt = dateTimeNow.format(dateTimeFormat);
         // Save the Return reference number
         String returnReference = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/div[1]/div/div/strong")).getText();
-        System.out.println("return Reference " + returnReference);
         // Create a formatted string to save
-        String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + createdAt;
+        String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + "nil" + '\t' + '\t' + createdAt;
         //write the string to the file
         buffedWriter.write(accountDetailsCreated);
         //start a new line so the next variable appended is on a new line
@@ -288,17 +170,16 @@ public class OSSMakeNilReturnScript {
         // Save screenshot
         try {
             String GGIDNoSpaces = govGatewayID.replaceAll("\\s", "");
-            FileHandler.copy(screenshotFile, new File("evidence/returns/OSSReturn_"+GGIDNoSpaces+returnReference +".png"));
+            FileHandler.copy(screenshotFile, new File("evidence/screenshots/OSS/returns/OSSReturn_"+GGIDNoSpaces+returnReference +".png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         */
 
         // Include demoSelected and gatewayIDValue in the result
         String result = "Demo Selected: " + demo + "\n";
         result += "GGID: " + govGatewayID + "\n";
-        result += "Return made: "+ returnReference;
+        result += "Return made: "+ returnReference + " Saved to: " + filepath;
 
         // Return the input and results string
         return result;

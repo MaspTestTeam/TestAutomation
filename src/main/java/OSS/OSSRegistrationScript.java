@@ -32,10 +32,10 @@ public class OSSRegistrationScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "75 46 24 97 58 71"; // Replace with your value
-        String VRNValue = "904529396"; // Use the same VRN used in previous script
-        String bpId = "100390314";  // bpID for the account created linked to vrn
-        String firstSaleDay ="15";  // Date of first sale variable day
+        String GGIDValue = "37 61 28 22 51 24"; // Replace with your value
+        String VRNValue = "900000104"; // Use the same VRN used in previous script
+        String bpId = "100356783";  // bpID for the account created linked to vrn
+        String firstSaleDay = "15";  // Date of first sale variable day
         String firstSaleMonth = "3";    //Date of first sale variable month
         String firstSaleYear = "2024";  //Date of first sale variable year
         String result = seleniumScript.executeSeleniumScript(
