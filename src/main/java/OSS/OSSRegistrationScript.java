@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 // YOU NEED GOV GATEWAY ID, VRN AND BP FOR AN ACCOUNT TO BEGIN CREATION
 // THE VARIABLES NEEDED ARE A GG ACCOUNT WITH BTA ACCOUNT (use BTACreationWithOutlook to make BTA)
 // VRN AND BTA MUST BE VALID TO ALLOW OSS CREATION
+// ONLY CHANGE THE DATE OF FIRST SALE VARIABLE IF THE SCRIPT FAILS THIS MAY NEED TO BE UPDATED
 // YO CALL THE SCRIPT USE THE  MAIN FUNCTION AND PUT IN THE VARIABLES NEEDED
 // DEMO BEING TRUE WILL SLOW THE AUTOMATION DOWN TO SEE WHAT'S HAPPENING.
 // THIS WILL OUTPUT A FILE THAT PRINTS OUT DETAILS FOR A NEW OSS ACCOUNT
@@ -31,14 +32,20 @@ public class OSSRegistrationScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "61 22 67 89 61 11"; // Replace with your value
-        String VRNValue = "854789654"; // Use the same VRN used in previous script
-        String bpId = "100377681";  // bpID for the account created linked to vrn
-        String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, VRNValue, bpId);
+        String GGIDValue = "75 46 24 97 58 71"; // Replace with your value
+        String VRNValue = "904529396"; // Use the same VRN used in previous script
+        String bpId = "100390314";  // bpID for the account created linked to vrn
+        String firstSaleDay ="15";  // Date of first sale variable day
+        String firstSaleMonth = "3";    //Date of first sale variable month
+        String firstSaleYear = "2024";  //Date of first sale variable year
+        String result = seleniumScript.executeSeleniumScript(
+                demoSelected, GGIDValue, VRNValue, bpId, firstSaleDay, firstSaleMonth, firstSaleYear);
         System.out.println(result);
     }
 
-    public String executeSeleniumScript(boolean demo, String govGatewayID, String VRNValue, String BPid) throws IOException, InterruptedException {
+    public String executeSeleniumScript(
+            boolean demo, String govGatewayID, String VRNValue, String BPid, String firstSaleDay, String firstSaleMonth, String firstSaleYear)
+            throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
         //***************************************************************
@@ -157,9 +164,9 @@ public class OSSRegistrationScript {
         driver.findElement(By.id("continue")).click();
 
         // Date of your first eligible sale since 1 July 2023
-        driver.findElement(By.id("value.day")).sendKeys("10");
-        driver.findElement(By.id("value.month")).sendKeys("1");
-        driver.findElement(By.id("value.year")).sendKeys("2024");
+        driver.findElement(By.id("value.day")).sendKeys(firstSaleDay);
+        driver.findElement(By.id("value.month")).sendKeys(firstSaleMonth);
+        driver.findElement(By.id("value.year")).sendKeys(firstSaleYear);
         if (demo) { Thread.sleep(waitTime); }
         // Click continue
         driver.findElement(By.id("continue")).click();
