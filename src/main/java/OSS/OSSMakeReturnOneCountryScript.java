@@ -3,7 +3,7 @@ package OSS;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.io.FileHandler;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,28 +14,40 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class OSSMakeReturnScript {
+// ********************************************************************
+// THIS SCRIPT WILL MAKE RETURN TO A GIVEN COUNTRY FOR THE AMOUNT DESIRED
+// yOU MUST HAVE THE GOV GATEWAY ID TO MAKE THE RETURN
+// THE ACCOUNT MUST HAVE OUTSTANDING RETURNS TO WORK
+// THE ACCOUNT CAN HAVE ONE OR MULTIPLE OUTSTANDING RETURN
+// THE SCRIPT WILL AUTOMATICALLY COMPLETE THE EARLIEST OUTSTANDING RETURN
+// THE RETURN REFERENCE WILL BE SAVED  TO A FILE IN THE EVIDENCE FOLDERS
+// ********************************************************************
+public class OSSMakeReturnOneCountryScript {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        OSSMakeReturnScript seleniumScript = new OSSMakeReturnScript();
+        OSSMakeReturnOneCountryScript seleniumScript = new OSSMakeReturnOneCountryScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
-        boolean demoSelected = true; // Replace with your value
-        String GGIDValue = "38 60 23 92 30 01"; // Replace with your value
-        String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue);
+        boolean demoSelected = false; // Replace with your value
+        String GGIDValue = "75 46 24 97 58 71"; // Replace with your value
+        String countryTradedWith = "Portugal";   // Country you are declaring trading with
+        String amountTraded = "1000.00";   // Goods traded in pounds(£)
+        String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, countryTradedWith, amountTraded);
         System.out.println(result);
     }
 
-    public String executeSeleniumScript(boolean demo, String govGatewayID) throws IOException, InterruptedException {
+    public String executeSeleniumScript(
+            boolean demo, String govGatewayID, String countryTradedWith, String amountTraded
+    ) throws IOException, InterruptedException {
         //***************************************************************
         //                  CHROME DRIVER INIT
         //***************************************************************
         System.setProperty("webdriver.chrome.driver", "resources/chromedriver.exe");
         // Initialize the WebDriver (in this case, using Chrome)
-        WebDriver driver = new ChromeDriver();
-        // Maximize the window
-        driver.manage().window().maximize();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments( "incognito");
+        WebDriver driver = new ChromeDriver(options);
         // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
 
@@ -51,17 +63,17 @@ public class OSSMakeReturnScript {
         //                  VARIABLES & .env LOADED
         //***************************************************************
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
-
         // Variables loaded in from .env
         String returnsURL = dotenv.get("RETURNS_URL");
         String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD");
         String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");
 
+
         //***************************************************************
         //                  FILE READER AND WRITER INIT
         //***************************************************************
         //filepath to be edited
-        String filepath ="evidence/returns/return_references.txt";
+        String filepath ="evidence/OSS/Returns/return_references.txt";
         File file = new File(filepath);
         //class to write to the file loaded
         FileWriter fileWriter = new FileWriter(file, true);
@@ -76,8 +88,6 @@ public class OSSMakeReturnScript {
         //***************************************************************
         // Open Start point URL
         driver.get(returnsURL);
-        // Get the current window handle
-        //String returnsWindowHandle = driver.getWindowHandle();
 
         // Log in to gov gateway account
         if (demo) { Thread.sleep(waitTime); }
@@ -94,7 +104,7 @@ public class OSSMakeReturnScript {
         driver.findElement(By.id("oss-start-return")).click();
         if (demo) { Thread.sleep(waitTime); }
 
-        // Do you want to start your return for 1 January to 31 March 2023?
+        // Do you want to start your return?
         // Click yes
         driver.findElement(By.id("value")).click();
         if (demo) { Thread.sleep(waitTime); }
@@ -111,8 +121,7 @@ public class OSSMakeReturnScript {
         WebElement countrySoldToInput = driver.findElement(By.id("value"));
         if ((countrySoldToInput.getAttribute("value").isEmpty()))
         {
-            System.out.println("Country value is EMPTY");
-            driver.findElement(By.id("value")).sendKeys("Portugal");
+            driver.findElement(By.id("value")).sendKeys(countryTradedWith);
             if (demo) { Thread.sleep(waitTime); }
             // Double click needed
             driver.findElement(By.id("continue")).click();
@@ -129,7 +138,7 @@ public class OSSMakeReturnScript {
         driver.findElement(By.id("continue")).click();
 
         // What were your sales at xx% rate excluding VAT?
-        driver.findElement(By.id("value")).sendKeys("5000.00");
+        driver.findElement(By.id("value")).sendKeys(amountTraded);
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("continue")).click();
 
@@ -148,6 +157,28 @@ public class OSSMakeReturnScript {
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("continue")).click();
 
+        //Did you make eligible sales from an EU country to other EU countries during this period?
+        //Click no
+        driver.findElement(By.id("value-no")).click();
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
+
+        // Do you want to correct a previous return?
+        // This only pops up if a return has been previously made.
+        // Check for inputs on this page and if there are then click no, otherwise carry on
+        List<WebElement> previousReturnInputs = driver.findElements(By.id("value-no"));
+        if (!previousReturnInputs.isEmpty()){
+            driver.findElement(By.id("value-no")).click();
+            if (demo) { Thread.sleep(waitTime); }
+            driver.findElement(By.id("continue")).click();
+
+        }
+        // Check your answers and click submit
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
+
+        /*
+        // THIS COMMENT CAN BE UNCOMMENTED OUT TO ADD A TRADE DECLARED BETWEEN TWO COUNTRIES NOT NI AND SOMEWHERE
         // Did you make eligible sales from an EU country to other EU countries during this period?
         // Click yes
         driver.findElement(By.id("value")).click();
@@ -230,26 +261,8 @@ public class OSSMakeReturnScript {
         driver.findElement(By.id("value-no")).click();
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("continue")).click();
+        */
 
-        // Do you want to correct a previous return?
-        // This only pops up if a return has been previously made.
-        // Check for inputs on this page and if there are then click no, otherwise carry on
-        List<WebElement> previousReturnInputs = driver.findElements(By.id("value-no"));
-        if (!previousReturnInputs.isEmpty()){
-            System.out.println("Do you want to correct a previous return? Page Loaded");
-            driver.findElement(By.id("value-no")).click();
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-            // Check your answers and click submit
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
-        else{
-            // Check your answers and click submit
-            System.out.println("Check your answers Page Loaded");
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
 
         //***************************************************************
         //                     SAVE RETURN DETAILS
@@ -260,9 +273,8 @@ public class OSSMakeReturnScript {
         String createdAt = dateTimeNow.format(dateTimeFormat);
         // Save the Return reference number
         String returnReference = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/div[1]/div/div/strong")).getText();
-        System.out.println("return Reference " + returnReference);
         // Create a formatted string to save
-        String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + createdAt;
+        String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + amountTraded + '\t' + '\t' + '\t' + createdAt;
         //write the string to the file
         buffedWriter.write(accountDetailsCreated);
         //start a new line so the next variable appended is on a new line
@@ -271,7 +283,8 @@ public class OSSMakeReturnScript {
         buffedWriter.close();
         fileWriter.close();
 
-
+        /*
+        //UNCOMMENT THIS BLOCK IF YOU WANT A SCREENSHOT
         //***************************************************************
         //             TAKE AND SAVE SCREENSHOT OF RETURN
         //***************************************************************
@@ -290,10 +303,12 @@ public class OSSMakeReturnScript {
             throw new RuntimeException(e);
         }
 
+         */
+
         // Include demoSelected and gatewayIDValue in the result
         String result = "Demo Selected: " + demo + "\n";
         result += "GGID: " + govGatewayID + "\n";
-        result += "Return made.";
+        result += "Return made: "+ returnReference + " Saved to: " + filepath;
 
         // Return the input and results string
         return result;
