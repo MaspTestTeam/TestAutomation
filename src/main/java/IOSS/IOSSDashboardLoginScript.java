@@ -10,7 +10,7 @@ import java.time.Duration;
 
 // ************************************************************
 // THIS SCRIPT WILL LOG INTO THE SIT ENVIRONMENT
-// cLICK THE VIEW IOSS ACCOUNT DASHBOARD AND IF THAT FAILS
+// cLICK THE VIEW IOSS ACCOUNT DASHBOARD
 // ************************************************************
 public class IOSSDashboardLoginScript {
 
@@ -20,7 +20,7 @@ public class IOSSDashboardLoginScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "49 96 79 65 89 59"; // Replace with your value
+        String GGIDValue = "85 48 22 53 42 71"; // Replace with your value
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue);
         System.out.println(result);
     }

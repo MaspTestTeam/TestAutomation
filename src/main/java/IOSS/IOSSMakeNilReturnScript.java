@@ -1,10 +1,9 @@
-package OSS;
+package IOSS;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.io.FileHandler;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,20 +22,49 @@ import java.util.List;
 // THE SCRIPT WILL AUTOMATICALLY COMPLETE THE EARLIEST OUTSTANDING RETURN
 // THE RETURN REFERENCE WILL BE SAVED  TO A FILE IN THE EVIDENCE FOLDERS
 // ********************************************************************
-public class OSSMakeNilReturnScript {
-
+public class IOSSMakeNilReturnScript {
     public static void main(String[] args) throws IOException, InterruptedException {
-        OSSMakeNilReturnScript seleniumScript = new OSSMakeNilReturnScript();
+        IOSSMakeNilReturnScript seleniumScript = new IOSSMakeNilReturnScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "37 61 28 22 51 24"; // Replace with your value
+        String GGIDValue = "85 48 22 53 42 71"; // Replace with your value
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue);
         System.out.println(result);
     }
 
+
     public String executeSeleniumScript(boolean demo, String govGatewayID) throws IOException, InterruptedException {
+        //***************************************************************
+        //                  DEMO VARIABLE FOR SHOWCASE
+        //***************************************************************
+        // demo=true to slow down the automation to waitTime in ms between steps.
+        int waitTime = 1000;
+
+
+        //***************************************************************
+        //                  VARIABLES & .env LOADED
+        //***************************************************************
+        // Variables loaded in from .env
+        Dotenv dotenv = Dotenv.load(); //Needed for .env loading
+        String govGatewayBTAStartPoint = dotenv.get("RETURNS_URL"); // Start point to LOG INTO BTA
+        String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD"); //GG account password used to create and log in
+        String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");   //Code used for authentication app
+
+
+        //***************************************************************
+        //                  FILE READER AND WRITER INIT
+        //***************************************************************
+        //filepath to be edited
+        String filepath ="evidence/IOSS/Returns/return_references.txt";
+        File file = new File(filepath);
+        //class to write to the file loaded
+        FileWriter fileWriter = new FileWriter(file, true);
+        //class used to edit the file
+        BufferedWriter buffedWriter = new BufferedWriter(fileWriter);
+
+
         //***************************************************************
         //                  CHROME DRIVER INIT
         //***************************************************************
@@ -50,56 +78,46 @@ public class OSSMakeNilReturnScript {
 
 
         //***************************************************************
-        //                  DEMO VARIABLE FOR SHOWCASE
-        //***************************************************************
-        // demo=true to slow down the automation to waitTime in ms between steps.
-        int waitTime = 1000;
-
-
-        //***************************************************************
-        //                  VARIABLES & .env LOADED
-        //***************************************************************
-        Dotenv dotenv = Dotenv.load(); //Needed for .env loading
-
-        // Variables loaded in from .env
-        String returnsURL = dotenv.get("RETURNS_URL");
-        String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD");
-        String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");
-
-
-        //***************************************************************
-        //                  FILE READER AND WRITER INIT
-        //***************************************************************
-        //filepath to be edited
-        String filepath ="evidence/OSS/Returns/return_references.txt";
-        File file = new File(filepath);
-        //class to write to the file loaded
-        FileWriter fileWriter = new FileWriter(file, true);
-        //class used to edit the file
-        BufferedWriter buffedWriter = new BufferedWriter(fileWriter);
-
-
-        //***************************************************************
         //******************* AUTOMATION START POINT ********************
         //***************************************************************
         //                      OPEN GOV GATEWAY
         //***************************************************************
-        // Open Start point URL
-        driver.get(returnsURL);
+        // Open start point URL but log in this time.
+        driver.get(govGatewayBTAStartPoint);
 
-        // Log in to gov gateway account
-        if (demo) { Thread.sleep(waitTime); }
+        //clear cookie banner if demo so screen can be seen clearer
+        if (demo){
+            // Accept cookies
+            driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/button[1]")).click();
+            //Clear Banner
+            driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/button")).click();
+            Thread.sleep(waitTime);
+        }
+
+        //***************************************************************
+        //                      SIGN IN
+        //***************************************************************
         driver.findElement(By.id("user_id")).sendKeys(govGatewayID);
         driver.findElement(By.id("password")).sendKeys(govGatewayPassword);
-        Thread.sleep(1000);
-        driver.findElement(By.id("continue")).click();
-        //Authentication code
+        Thread.sleep(2000);
+        WebElement continueElement =driver.findElement(By.id("continue"));
+        if (continueElement.isDisplayed() && continueElement.isEnabled()) {
+            continueElement.click();
+        }
+        // Authentication code
         driver.findElement(By.id("oneTimePassword")).sendKeys(authenticationCode);
+        Thread.sleep(2000);
+        WebElement authContinueElement =driver.findElement(By.id("continue"));
+        if (authContinueElement.isDisplayed() && authContinueElement.isEnabled()) {
+            authContinueElement.click();
+        }
+        // Skip activities
+        //driver.findElement(By.id("confirm-No")).click();
+        //driver.findElement(By.id("continue")).click();
         if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
 
-        // one-stop shop vat click start your return link
-        driver.findElement(By.id("oss-start-return")).click();
+        // IOSS vat click start your return link
+        driver.findElement(By.id("ioss-start-return")).click();
         if (demo) { Thread.sleep(waitTime); }
 
         // Do you want to start your return?
@@ -109,12 +127,6 @@ public class OSSMakeNilReturnScript {
         driver.findElement(By.id("continue")).click();
 
         // Did you make eligible sales from Northern Ireland to the EU during this period?
-        // Click No
-        driver.findElement(By.id("value-no")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // Did you make eligible sales from an EU country to other EU countries during this period?
         // Click No
         driver.findElement(By.id("value-no")).click();
         if (demo) { Thread.sleep(waitTime); }
@@ -130,6 +142,7 @@ public class OSSMakeNilReturnScript {
             driver.findElement(By.id("continue")).click();
 
         }
+
         // Check your answers and click submit
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("continue")).click();
@@ -143,7 +156,7 @@ public class OSSMakeNilReturnScript {
         DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String createdAt = dateTimeNow.format(dateTimeFormat);
         // Save the Return reference number
-        String returnReference = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/div[1]/div/div/strong")).getText();
+        String returnReference = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/div[1]/div/strong")).getText();
         // Create a formatted string to save
         String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + "nil" + '\t' + '\t' + '\t' + createdAt;
         //write the string to the file
@@ -153,7 +166,6 @@ public class OSSMakeNilReturnScript {
         //close classes once file has been edited
         buffedWriter.close();
         fileWriter.close();
-
 
         /*
         //UNCOMMENT THIS BLOCK IF YOU WANT A SCREENSHOT
@@ -170,18 +182,18 @@ public class OSSMakeNilReturnScript {
         // Save screenshot
         try {
             String GGIDNoSpaces = govGatewayID.replaceAll("\\s", "");
-            FileHandler.copy(screenshotFile, new File("evidence/screenshots/OSS/returns/OSSReturn_"+GGIDNoSpaces+returnReference +".png"));
+            FileHandler.copy(screenshotFile, new File("evidence/screenshots/IOSS/returns/IOSSReturn_"+GGIDNoSpaces+returnReference +".png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         */
 
-        // Include demoSelected and gatewayIDValue in the result
-        String result = "Demo Selected: " + demo + "\n";
-        result += "GGID: " + govGatewayID + "\n";
-        result += "Return made: "+ returnReference + " Saved to: " + filepath;
 
         // Return the input and results string
+        String result = "Demo Selected: " + demo + "\n";
+        result += "GOV GATEWAY ID: " + govGatewayID + "\n";
+        result += "Return made: "+ returnReference + " Saved to: " + filepath;
         return result;
+
     }
 }

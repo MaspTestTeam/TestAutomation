@@ -1,3 +1,3 @@
-    GatewayID         Return Reference      Amount   Date
-96 37 47 63 32 15	XI/XI768212616/Q1.2023  1900    07/09/2023
-
+    GatewayID         Return Reference          Amount(£)   Date
+96 37 47 63 32 15	XI/XI768212616/Q1.2023      1900        07/09/2023
+85 48 22 53 42 71	XI/IM9000004107/M01.2024	nil		    04/04/2024
