@@ -32,19 +32,16 @@ public class OSSRegistrationScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "37 61 28 22 51 24"; // Replace with your value
-        String VRNValue = "900000104"; // Use the same VRN used in previous script
-        String bpId = "100356783";  // bpID for the account created linked to vrn
-        String firstSaleDay = "15";  // Date of first sale variable day
-        String firstSaleMonth = "3";    //Date of first sale variable month
-        String firstSaleYear = "2024";  //Date of first sale variable year
+        String GGIDValue = "29 29 16 24 99 89"; // Replace with your value
+        String VRNValue = "900000107"; // Use the same VRN used in previous script
+        String bpId = "100357269";  // bpID for the account created linked to vrn
         String result = seleniumScript.executeSeleniumScript(
-                demoSelected, GGIDValue, VRNValue, bpId, firstSaleDay, firstSaleMonth, firstSaleYear);
+                demoSelected, GGIDValue, VRNValue, bpId);
         System.out.println(result);
     }
 
     public String executeSeleniumScript(
-            boolean demo, String govGatewayID, String VRNValue, String BPid, String firstSaleDay, String firstSaleMonth, String firstSaleYear)
+            boolean demo, String govGatewayID, String VRNValue, String BPid)
             throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
@@ -163,10 +160,15 @@ public class OSSRegistrationScript {
         // Click continue
         driver.findElement(By.id("continue")).click();
 
-        // Date of your first eligible sale since 1 July 2023
-        driver.findElement(By.id("value.day")).sendKeys(firstSaleDay);
-        driver.findElement(By.id("value.month")).sendKeys(firstSaleMonth);
-        driver.findElement(By.id("value.year")).sendKeys(firstSaleYear);
+        // Date of your first eligible sale
+        // This returns a string of the format "For example, 1 3 2024"
+        String exampleDateText = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/form/div[1]/fieldset/div[1]")).getText();
+        //Parse the string to get three values 1, 3, 2024 as an array [1, 3, 2024]
+        String[] dates = exampleDateText.split(",",2)[1].trim().split(" ", 3);
+        // Input the three example values
+        driver.findElement(By.id("value.day")).sendKeys(dates[0]);
+        driver.findElement(By.id("value.month")).sendKeys(dates[1]);
+        driver.findElement(By.id("value.year")).sendKeys(dates[2]);
         if (demo) { Thread.sleep(waitTime); }
         // Click continue
         driver.findElement(By.id("continue")).click();
@@ -260,6 +262,7 @@ public class OSSRegistrationScript {
         //close classes once file has been edited
         buffedWriter.close();
         fileWriter.close();
+
 
         // Include demoSelected and gatewayIDValue in the result
         String result = "Demo Selected: " + demo + "\n";

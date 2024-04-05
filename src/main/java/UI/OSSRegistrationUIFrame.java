@@ -172,7 +172,7 @@ public class OSSRegistrationUIFrame extends JFrame{
         try {
             // Call the executeSeleniumScript method from the other class
             String result = seleniumScript.executeSeleniumScript(
-                    demoSelected, VRNValue, "GGPlaceholder", "BPPlaceholder", "1", "5", "2024");
+                    demoSelected, VRNValue, "GGPlaceholder", "BPPlaceholder");
             //return result that will update the text area
             return "OSSCreationSeleniumScript" +" script has run! " + "\n" + result;
         } catch (Exception e) {
