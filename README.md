@@ -37,9 +37,9 @@ Guides for the above prerequisites can be emailed out or found in the sharepoint
 
 ### Registering for OSS/IOSS
 **NOTE:** The OSS and IOSS script structure and behaviour is the same to running one or the other requires the same steps. 
-For this example I will demonstrate the OSS registering
+For this example I will demonstrate the IOSS registration.
 1. You will need the Gov Gateway ID, VRN and BP number for the account you are registering. This can be found easily in the bta_Created_accounts.txt
-2. Open the IOSSRegistrationScript and change the VRN, BP and GG in the main() and run the file te same as the BTA using Current File and press play.
+2. Open the IOSSRegistrationScript and change the VRN, BP and GG in the main() and run the file the same as the BTA using Current File and press play.
 ![Running IOSS](assets/running_IOSS_Reg.PNG)
 3. Sit back and wait for the creation of the account. The final step can take a few seconds so wait for the terminal to print out the test is completed. There is a delay waiting for the IOSS reg number to be shown to save it.
 4. To find the information and details for the IOSS registration they are saved to accounts/ioss_created_Accounts.txt.
@@ -47,6 +47,17 @@ For this example I will demonstrate the OSS registering
 5. You can edit this file with any notes you want, it is not read by any script and only wrote to with new accounts appended to the bottom.
 
 The same steps for OSS are repeated as above but using the OSSRegistrationScript and details are saved to oss_Created_accounts.txt.
+
+### Making a return
+**NOTE:** The OSS and IOSS script structure is the same. For this example I will demonstrate the OSS behaviour.
+1. You will need Gov GatewayID of the account making a return.
+2. The account needs outstanding returns due before the script can be run. 
+3. Enter the country you are declaring a trade with and for how much.
+![OSS_Return](assets/OSS_return_input.PNG)
+4. Sit back and wait for the script to run, It will collect the return reference at the end you don't need to note it down yourself.
+5. To find the information and details for the return go to evidence/OSS/Returns/return_references.txt
+![OSS_Return_Output](assets/OSS_return_output.PNG)
+6. If you need to make a return to 2 countries then you can use the OSSMakeReturnTwoCountriesScript.java and follow the same steps as above.
 
 ## Editing the scripts
 Once the project is set up you can create accounts you are free to use the project how you want. You can create a new script or edit ones already there.
@@ -68,3 +79,5 @@ Common error: Your chrome and web-driver are out of sync due to updates. This re
 If you get errors with the UI package, you can delete the entire package, it is there as an extra but not needed.
 
 If you start editing your scripts you can set up a GitHub repository on an account and push it there. 
+
+If you are out of sync with the repo the fastest way to get going again would be to make a new project and clone the repo again. Just make sure you keep your accounts copied and saved somewhere else and can drag them back in once the new project has been initialised. 

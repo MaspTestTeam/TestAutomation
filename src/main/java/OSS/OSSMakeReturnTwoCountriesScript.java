@@ -34,10 +34,10 @@ public class OSSMakeReturnTwoCountriesScript {
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
         String GGIDValue = "75 46 24 97 58 71"; // Replace with your value
-        String firstCountryTradedWith = "Portugal";   // Country you are declaring trading with first
-        String firstAmountTraded = "1000.00";   // Goods traded in pounds(£)
-        String secondCountryTradedWith = "Finland";   // Country you are declaring trading with second
-        String secondAmountTraded = "1200.00";   // Goods traded in pounds(£)
+        String firstCountryTradedWith = "Portugal";   // Country you are declaring trading with first (make sure the first letter is capitalised)
+        String firstAmountTraded = "1000.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
+        String secondCountryTradedWith = "Finland";   // Country you are declaring trading with second (make sure the first letter is capitalised)
+        String secondAmountTraded = "1200.00";   // Goods traded in pounds(£), remember the pence in the number (.00))
         String result = seleniumScript.executeSeleniumScript(
                 demoSelected, GGIDValue, firstCountryTradedWith, firstAmountTraded, secondCountryTradedWith, secondAmountTraded
         );

@@ -31,8 +31,8 @@ public class OSSMakeReturnOneCountryScript {
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
         String GGIDValue = "75 46 24 97 58 71"; // Replace with your value
-        String countryTradedWith = "Portugal";   // Country you are declaring trading with
-        String amountTraded = "1000.00";   // Goods traded in pounds(£)
+        String countryTradedWith = "Portugal";   // Country you are declaring trading with (make sure the first letter is capitalised)
+        String amountTraded = "1000.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, countryTradedWith, amountTraded);
         System.out.println(result);
     }
