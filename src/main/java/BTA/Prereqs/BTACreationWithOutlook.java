@@ -37,8 +37,8 @@ public class BTACreationWithOutlook {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String VRNValue = "900000107"; // Replace with your value
-        String BPValue = "100357269";   //Replace with your BP value
+        String VRNValue = "966601014"; // Replace with your value
+        String BPValue = "100381550";   //Replace with your BP value
         String result = seleniumScript.executeSeleniumScript(VRNValue, BPValue, demoSelected);
         System.out.println(result);
     }
@@ -367,7 +367,7 @@ public class BTACreationWithOutlook {
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String createdAt = dateTimeNow.format(dateTimeFormat);
             // Create a formatted string to save
-            String accountDetailsCreated = govGatewayID + '\t' + VRNValue + '\t' + BPValue + '\t' + userId + '\t' + groupId + '\t' + createdAt;
+            String accountDetailsCreated = govGatewayID + '\t' + VRNValue + '\t' + BPValue + '\t' + userId + '\t' + groupId + '\t' + createdAt + '\t' + "false";
             //write the string to the file
             buffedWriter.write(accountDetailsCreated);
             //start a new line so the next variable appended is on a new line
