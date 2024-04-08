@@ -20,7 +20,7 @@ public class IOSSDashboardLoginScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "85 48 22 53 42 71"; // Replace with your value
+        String GGIDValue = "29 29 16 24 99 89"; // Replace with your value
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue);
         System.out.println(result);
     }

@@ -31,9 +31,9 @@ public class IOSSMakeReturnOneCountryScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "85 48 22 53 42 71"; // Replace with your value
-        String countryTradedWith = "Portugal";   // Country you are declaring trading with (make sure the first letter is capitalised)
-        String amountTraded = "100.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
+        String GGIDValue = "29 29 16 24 99 89"; // Replace with your value
+        String countryTradedWith = "Austria";   // Country you are declaring trading with (make sure the first letter is capitalised)
+        String amountTraded = "160.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, countryTradedWith, amountTraded);
         System.out.println(result);
     }

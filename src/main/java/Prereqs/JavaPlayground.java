@@ -23,6 +23,9 @@ public class JavaPlayground {
         System.out.println(firstSaleYear);
 
 
+        Double amountToPay = Double.parseDouble("32")*(40/100d);
+        System.out.println(amountToPay);
+
     }
 
 }
