@@ -50,8 +50,10 @@ public class OSSRegistrationWithFeScript {
         int waitTime = 1000;
 
         //***************************************************************
-        //                  VARIABLES & .env LOADED
+        //               VARIABLES & .env LOADED & TIMER
         //***************************************************************
+        // Start Timer
+        long startTime = System.currentTimeMillis();
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayStartPointURL = dotenv.get("GOV_GATEWAY_START_POINT_URL");
@@ -71,6 +73,8 @@ public class OSSRegistrationWithFeScript {
         WebDriver driver = new ChromeDriver(options);
         // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        // Full screen window
+        driver.manage().window().maximize();
 
 
         //***************************************************************
@@ -336,7 +340,15 @@ public class OSSRegistrationWithFeScript {
         result += "OSS Account created with Gov GatewayID: " + govGatewayID + "\n";
         result += "Details saved to: " + filepath + "\n";
 
-        // Return the input and results string
+
+        //***************************************************************
+        //                          END TIMER
+        //***************************************************************
+        long finishTime = System.currentTimeMillis();
+        double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+        result += "Time to Run Script: " + timeElapsedInSeconds + " seconds.";
+
+        // Return final result string
         return result;
     }
 }

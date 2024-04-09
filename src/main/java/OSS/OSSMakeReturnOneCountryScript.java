@@ -41,6 +41,25 @@ public class OSSMakeReturnOneCountryScript {
             boolean demo, String govGatewayID, String countryTradedWith, String amountTraded
     ) throws IOException, InterruptedException {
         //***************************************************************
+        //                  DEMO VARIABLE FOR SHOWCASE
+        //***************************************************************
+        // demo=true to slow down the automation to waitTime in ms between steps.
+        int waitTime = 1000;
+
+
+        //***************************************************************
+        //               VARIABLES & .env LOADED & TIMER
+        //***************************************************************
+        // Start Timer
+        long startTime = System.currentTimeMillis();
+        // Variables loaded in from .env
+        Dotenv dotenv = Dotenv.load(); //Needed for .env loading
+        String returnsURL = dotenv.get("RETURNS_URL");
+        String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD");
+        String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");
+
+
+        //***************************************************************
         //                  CHROME DRIVER INIT
         //***************************************************************
         System.setProperty("webdriver.chrome.driver", "resources/chromedriver.exe");
@@ -50,23 +69,8 @@ public class OSSMakeReturnOneCountryScript {
         WebDriver driver = new ChromeDriver(options);
         // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
-
-
-        //***************************************************************
-        //                  DEMO VARIABLE FOR SHOWCASE
-        //***************************************************************
-        // demo=true to slow down the automation to waitTime in ms between steps.
-        int waitTime = 1000;
-
-
-        //***************************************************************
-        //                  VARIABLES & .env LOADED
-        //***************************************************************
-        Dotenv dotenv = Dotenv.load(); //Needed for .env loading
-        // Variables loaded in from .env
-        String returnsURL = dotenv.get("RETURNS_URL");
-        String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD");
-        String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");
+        // Full screen window
+        driver.manage().window().maximize();
 
 
         //***************************************************************
@@ -308,9 +312,17 @@ public class OSSMakeReturnOneCountryScript {
         // Include demoSelected and gatewayIDValue in the result
         String result = "Demo Selected: " + demo + "\n";
         result += "GGID: " + govGatewayID + "\n";
-        result += "Return made: "+ returnReference + " Saved to: " + filepath;
+        result += "Return made: "+ returnReference + " Saved to: " + filepath + '\n';
 
-        // Return the input and results string
+
+        //***************************************************************
+        //                          END TIMER
+        //***************************************************************
+        long finishTime = System.currentTimeMillis();
+        double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+        result += "Time to Run Script: " + timeElapsedInSeconds + " seconds.";
+
+        // Return final result string
         return result;
     }
 }
