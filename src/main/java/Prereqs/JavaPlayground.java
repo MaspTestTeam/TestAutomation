@@ -26,6 +26,11 @@ public class JavaPlayground {
         Double amountToPay = Double.parseDouble("32")*(40/100d);
         System.out.println(amountToPay);
 
+        // TODO: Create a function that will start a timer and then stop the timer and return the time passed
+        // This will give me accurate tim taken to run each script for data and clarity
+
+
+
     }
 
 }

@@ -21,33 +21,38 @@ import java.util.Objects;
 
 // ************************************************************
 // note: THIS SCRIPT WILL ALWAYS DO THE MOST OUTSTANDING PAYMENT ON THE ACCOUNT
-// THIS SCRIPT WILL LOG THE TRADER IN AND MAKE A PAYMENT USING CREDIT CARD DETAILS
-// THE PAYMENT CAN BE FULL OR PARTIAL BY CHANGING THE PERCENTAGE PAYMENT VARIABLE
+// THIS SCRIPT WILL MAKE A PAYMENT USING CREDIT CARD DETAILS WITHOUT LOGGING IN
+// THE PAYMENT CAN BE FULL OR PARTIAL YOU MUST KNOW THE OUTSTANDING AMOUNT AHEAD OF TIME
 // TO COMPLETE A PAYMENT IT MUST BE PROCESSED CORRECTLY
 // THIS REQUIRES PAYMENT SERVICE AND THEN ETMP TO PROCESS
 // UNTIL THE PAYMENT IN PROCESSED THE PAYMENT WILL BE OUTSTANDING IN YOUR ACCOUNT
 // ************************************************************
-public class IOSSLoggedInPaymentScript {
+public class IOSSLoggedOutPaymentScript {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        IOSSLoggedInPaymentScript seleniumScript = new IOSSLoggedInPaymentScript();
+        IOSSLoggedOutPaymentScript seleniumScript = new IOSSLoggedOutPaymentScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "29 29 16 24 99 89"; // Replace with your value
-        int percentPayment = 40; // Integer only, no decimals. 100 -> 100% = full payment
-        String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, percentPayment);
+        String IOSSNumber = "IM9000004151"; // This script requires you to have your IOSS reference number not GGid
+        String periodMonth = "1"; // Which month you want to pay the outstanding payment
+        String periodYear = "2024"; // Which year you want to pay the outstanding payment.
+        String paymentAmount = "10.00"; // Must be in the form of xx.xx to work.
+        String result = seleniumScript.executeSeleniumScript(demoSelected, IOSSNumber, periodMonth, periodYear, paymentAmount);
         System.out.println(result);
     }
 
 
-    public String executeSeleniumScript(boolean demo, String govGatewayID, int percentPayment) throws IOException, InterruptedException {
+    public String executeSeleniumScript(
+            boolean demo, String IOSSNumber, String periodMonth, String periodYear, String paymentAmount
+    ) throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
         //***************************************************************
         // demo=true to slow down the automation to waitTime in ms between steps.
         int waitTime = 1000;
+
 
         //***************************************************************
         //                  VARIABLES & .env LOADED
@@ -56,9 +61,7 @@ public class IOSSLoggedInPaymentScript {
         DecimalFormat df = new DecimalFormat("0.00");
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
-        String govGatewayBTAStartPoint = dotenv.get("RETURNS_URL"); // Start point to LOG INTO BTA
-        String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD"); //GG account password used to create and log in
-        String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");   //Code used for authentication app
+        String govGatewayStartPoint = dotenv.get("LOGGED_OUT_PAYMENT"); // Start point for logged out trader
         String outlookEmailUrl = dotenv.get("OUTLOOK_EMAIL");    //Url for Outlook email to send confirmation to
         String creditCardNumber = dotenv.get("CREDIT_CARD_NUMBER");    //Card details used to make the payment
 
@@ -92,61 +95,46 @@ public class IOSSLoggedInPaymentScript {
         //                      OPEN GOV GATEWAY
         //***************************************************************
         // Open start point URL but log in this time.
-        driver.get(govGatewayBTAStartPoint);
-
-        //clear cookie banner if demo so screen can be seen clearer
-        if (demo){
-            // Accept cookies
-            driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/button[1]")).click();
-            //Clear Banner
-            driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/button")).click();
-            Thread.sleep(waitTime);
-        }
+        driver.get(govGatewayStartPoint);
 
         //***************************************************************
-        //                      SIGN IN
+        //                      LOGGED OUT START POINT
         //***************************************************************
-        driver.findElement(By.id("user_id")).sendKeys(govGatewayID);
-        driver.findElement(By.id("password")).sendKeys(govGatewayPassword);
-        Thread.sleep(2000);
-        WebElement continueElement =driver.findElement(By.id("continue"));
-        if (continueElement.isDisplayed() && continueElement.isEnabled()) {
-            continueElement.click();
-        }
-        // Authentication code
-        driver.findElement(By.id("oneTimePassword")).sendKeys(authenticationCode);
-        Thread.sleep(2000);
-        WebElement authContinueElement =driver.findElement(By.id("continue"));
-        if (authContinueElement.isDisplayed() && authContinueElement.isEnabled()) {
-            authContinueElement.click();
-        }
-        // Skip activities
-        //driver.findElement(By.id("confirm-No")).click();
-        //driver.findElement(By.id("continue")).click();
+        //Do you want to sign in to your tax account?
+        //Click no
+        driver.findElement(By.id("log_in-2")).click();
         if (demo) { Thread.sleep(waitTime); }
+        //Click continue
+        driver.findElement(By.id("next")).click();
 
-        //***************************************************************
-        //                  CLICK PAYMENT OUTSTANDING
-        //***************************************************************
-        //USE HYPERLINK
-        driver.findElement(By.id("ioss-make-payment")).click();
+        //Do you want to make Import One-Stop Shop VAT payments on distance sales to the EU?
+        //Click yes
+        driver.findElement(By.id("vat_ioss_check_option")).click();
+        if (demo) { Thread.sleep(waitTime); }
+        //Click continue
+        driver.findElement(By.id("next")).click();
 
-        // Get the outstanding balance
-        String[] amountDue = driver.findElement(
-                By.xpath("/html/body/div[2]/main/div/div/div[1]/form/div/fieldset/div/div/div[1]/label")).getText().trim().split("£", 2);
-        // Find the amount to pay based on the percentage input by the user
-        Double amountToPay = (percentPayment/100d)*Double.parseDouble(amountDue[1]);
+        //What is your IOSS registration number?
+        //Enter IOSS Reg number
+        driver.findElement(By.id("ioss")).sendKeys(IOSSNumber);
         if (demo) { Thread.sleep(waitTime); }
-        //Format the string so that the payment is £xx.xx as a string to input
-        String amountToPayString = df.format(amountToPay);
-        // Click pay different amount
-        driver.findElement(By.id("dontUsePrepopulatedAmount")).click();
-        Thread.sleep(200);
-        //Enter the amount to pay
-        driver.findElement(By.id("amountEntered")).sendKeys(amountToPayString);
-        Thread.sleep(200);
+        //Click continue
+        driver.findElement(By.id("next")).click();
+
+        // Which VAT period do you want to pay?
+        //Enter the month
+        driver.findElement(By.id("month")).sendKeys(periodMonth);
         if (demo) { Thread.sleep(waitTime); }
-        // Click continue
+        //Enter the year
+        driver.findElement(By.id("year")).sendKeys(periodYear);
+        if (demo) { Thread.sleep(waitTime); }
+        //Click continue
+        driver.findElement(By.id("next")).click();
+
+        // Enter the amount to pay in pounds
+        driver.findElement(By.id("amountToPay")).sendKeys(paymentAmount);
+        if (demo) { Thread.sleep(waitTime); }
+        //Click continue
         driver.findElement(By.id("next")).click();
 
         //Choose a way to pay
@@ -185,8 +173,6 @@ public class IOSSLoggedInPaymentScript {
 
         //Check your details
         if (demo) { Thread.sleep(waitTime); }
-        // Get the IOSS number for the account while here
-        String IOSSNumber = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/dl/div[3]/dd")).getText().trim();
         //Get the payment reference number while here
         String paymentReference = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/dl/div[5]/dd")).getText().trim();
         //Click continue
@@ -233,7 +219,7 @@ public class IOSSLoggedInPaymentScript {
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String createdAt = dateTimeNow.format(dateTimeFormat);
             // Create a formatted string to save
-            String accountDetailsCreated = govGatewayID + '\t' + IOSSNumber + '\t' + paymentReference + '\t' + amountToPayString + '\t' + '\t' + createdAt;
+            String accountDetailsCreated = "Logged Out" + '\t' + '\t'+ '\t'+ IOSSNumber + '\t' + paymentReference + '\t' + paymentAmount + '\t' + '\t' + createdAt;
             //write the string to the file
             buffedWriter.write(accountDetailsCreated);
             //start a new line so the next variable appended is on a new line
@@ -243,9 +229,9 @@ public class IOSSLoggedInPaymentScript {
             fileWriter.close();
 
             // Return the input and results string
-            result += "GOV GATEWAY ID: " + govGatewayID + " PaymentRef: " + paymentReference + " Saved to: " + filepath;
+            result += "GOV GATEWAY ID: " + "Logged Out" + " PaymentRef: " + paymentReference + " Saved to: " + filepath;
         } else{
-            result += "IOSS PAYMENT SCRIPT RAN AND FAILED"+ "\n";
+            result += "IOSS PAYMENT LOGGED OUT SCRIPT RAN AND FAILED"+ "\n";
         }
 
         return result;
