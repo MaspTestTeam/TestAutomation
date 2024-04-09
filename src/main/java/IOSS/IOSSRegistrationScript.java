@@ -46,8 +46,10 @@ public class IOSSRegistrationScript {
         int waitTime = 1000;
 
         //***************************************************************
-        //                  VARIABLES & .env LOADED
+        //              VARIABLES & .env LOADED & TIMER
         //***************************************************************
+        // Start Timer
+        long startTime = System.currentTimeMillis();
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayStartPointURL = dotenv.get("IOSS_REGISTRATION_LINK"); // Start point to create IOSS registration
@@ -67,6 +69,8 @@ public class IOSSRegistrationScript {
         WebDriver driver = new ChromeDriver(options);
         // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        // Full screen window
+        driver.manage().window().maximize();
 
         try{
             //***************************************************************
@@ -272,7 +276,16 @@ public class IOSSRegistrationScript {
             String result = "Demo Selected: " + demo + "\n";
             result += "IOSS Account created with Gov GatewayID: " + govGatewayID + "\n";
             result += "Details saved to: " + filepath + "\n";
-            // Return the input and results string
+
+
+            //***************************************************************
+            //                          END TIMER
+            //***************************************************************
+            long finishTime = System.currentTimeMillis();
+            double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+            result += "Time to Run Script: " + timeElapsedInSeconds + " seconds.";
+
+            // Return final result string
             return result;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);

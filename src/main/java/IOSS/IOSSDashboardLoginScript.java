@@ -34,8 +34,10 @@ public class IOSSDashboardLoginScript {
         int waitTime = 1000;
 
         //***************************************************************
-        //                  VARIABLES & .env LOADED
+        //              VARIABLES & .env LOADED & TIMER
         //***************************************************************
+        // Start Timer
+        long startTime = System.currentTimeMillis();
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayBTAStartPoint = dotenv.get("RETURNS_URL"); // Start point to LOG INTO BTA
@@ -48,10 +50,12 @@ public class IOSSDashboardLoginScript {
         System.setProperty("webdriver.chrome.driver", "resources/chromedriver.exe");
         // Initialize the WebDriver (in this case, using Chrome)
         ChromeOptions options = new ChromeOptions();
-        options.addArguments( "incognito");
+        options.addArguments("incognito");
         WebDriver driver = new ChromeDriver(options);
         // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        // Full screen window
+        driver.manage().window().maximize();
 
         //***************************************************************
         //******************* AUTOMATION START POINT ********************
@@ -102,7 +106,16 @@ public class IOSSDashboardLoginScript {
         String result = "Demo Selected: " + demo + "\n";
         result += "IOSS LOGIN SCRIPT RAN" + "\n";
         result += "GOV GATEWAY ID: " + govGatewayID + "\n";
-        return result;
 
+
+        //***************************************************************
+        //                          END TIMER
+        //***************************************************************
+        long finishTime = System.currentTimeMillis();
+        double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+        result += "Time to Run Script: " + timeElapsedInSeconds + " seconds.";
+
+        // Return final result string
+        return result;
     }
 }

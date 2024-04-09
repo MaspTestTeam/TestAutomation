@@ -18,6 +18,7 @@ import java.util.List;
 // THIS SCRIPT WILL MAKE A NIL RETURN
 // yOU MUST HAVE THE GOV GATEWAY ID TO MAKE THE RETURN
 // THE ACCOUNT MUST HAVE OUTSTANDING RETURNS TO WORK
+// AN ICR MUST BE SET UP IN SAP FOR THE OUTSTANDING MOTH THE RETURN IS DUE
 // THE ACCOUNT CAN HAVE ONE OR MULTIPLE OUTSTANDING RETURN
 // THE SCRIPT WILL AUTOMATICALLY COMPLETE THE EARLIEST OUTSTANDING RETURN
 // THE RETURN REFERENCE WILL BE SAVED  TO A FILE IN THE EVIDENCE FOLDERS
@@ -44,8 +45,10 @@ public class IOSSMakeNilReturnScript {
 
 
         //***************************************************************
-        //                  VARIABLES & .env LOADED
+        //              VARIABLES & .env LOADED & TIMER
         //***************************************************************
+        // Start Timer
+        long startTime = System.currentTimeMillis();
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayBTAStartPoint = dotenv.get("RETURNS_URL"); // Start point to LOG INTO BTA
@@ -75,6 +78,8 @@ public class IOSSMakeNilReturnScript {
         WebDriver driver = new ChromeDriver(options);
         // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        // Full screen window
+        driver.manage().window().maximize();
 
 
         //***************************************************************
@@ -188,12 +193,20 @@ public class IOSSMakeNilReturnScript {
         }
         */
 
-
         // Return the input and results string
         String result = "Demo Selected: " + demo + "\n";
         result += "GOV GATEWAY ID: " + govGatewayID + "\n";
-        result += "Return made: "+ returnReference + " Saved to: " + filepath;
-        return result;
+        result += "Return made: "+ returnReference + " Saved to: " + filepath + '\n';
 
+
+        //***************************************************************
+        //                          END TIMER
+        //***************************************************************
+        long finishTime = System.currentTimeMillis();
+        double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+        result += "Time to Run Script: " + timeElapsedInSeconds + " seconds.";
+
+        // Return final result string
+        return result;
     }
 }

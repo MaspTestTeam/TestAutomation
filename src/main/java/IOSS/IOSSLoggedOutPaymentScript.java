@@ -88,6 +88,8 @@ public class IOSSLoggedOutPaymentScript {
         WebDriver driver = new ChromeDriver(options);
         // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        // Full screen window
+        driver.manage().window().maximize();
 
         //***************************************************************
         //******************* AUTOMATION START POINT ********************

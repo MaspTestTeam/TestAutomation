@@ -50,8 +50,10 @@ public class IOSSMakeReturnOneCountryScript {
 
 
         //***************************************************************
-        //                  VARIABLES & .env LOADED
+        //              VARIABLES & .env LOADED & TIMER
         //***************************************************************
+        // Start Timer
+        long startTime = System.currentTimeMillis();
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayBTAStartPoint = dotenv.get("RETURNS_URL"); // Start point to LOG INTO BTA
@@ -81,6 +83,8 @@ public class IOSSMakeReturnOneCountryScript {
         WebDriver driver = new ChromeDriver(options);
         // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        // Full screen window
+        driver.manage().window().maximize();
 
 
         //***************************************************************
@@ -210,7 +214,17 @@ public class IOSSMakeReturnOneCountryScript {
         // Return the input and results string
         String result = "Demo Selected: " + demo + "\n";
         result += "GOV GATEWAY ID: " + govGatewayID + "\n";
-        result += "Return made: "+ returnReference + " Saved to: " + filepath;
+        result += "Return made: "+ returnReference + " Saved to: " + filepath + '\n';
+
+
+        //***************************************************************
+        //                          END TIMER
+        //***************************************************************
+        long finishTime = System.currentTimeMillis();
+        double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+        result += "Time to Run Script: " + timeElapsedInSeconds + " seconds.";
+
+        // Return final result string
         return result;
     }
 

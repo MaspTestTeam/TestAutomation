@@ -36,7 +36,7 @@ public class BTACreationWithOutlook {
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
-        boolean demoSelected = false; // Replace with your value
+        boolean demoSelected = true; // Replace with your value
         String VRNValue = "966601014"; // Replace with your value
         String BPValue = "100381550";   //Replace with your BP value
         String result = seleniumScript.executeSeleniumScript(VRNValue, BPValue, demoSelected);
@@ -45,8 +45,17 @@ public class BTACreationWithOutlook {
 
     public String executeSeleniumScript(String VRNValue, String BPValue, boolean demo) throws IOException {
         //***************************************************************
-        //                  VARIABLES & .env LOADED
+        //                  DEMO VARIABLE FOR SHOWCASE
         //***************************************************************
+        // demo=true to slow down the automation to waitTime in ms between steps.
+        int waitTime = 1000;
+
+
+        //***************************************************************
+        //              VARIABLES & .env LOADED & TIMER
+        //***************************************************************
+        // Start Timer
+        long startTime = System.currentTimeMillis();
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayStartPointURL = dotenv.get("GOV_GATEWAY_START_POINT_URL"); //Start point to create GG account
         String outlookEmail = dotenv.get("OUTLOOK_EMAIL");  //Outlook email account needed
@@ -63,11 +72,7 @@ public class BTACreationWithOutlook {
         String govGatewayID = null;
         String userId = "6535364130532634";
         String groupId = "16CEABDA-4894-4161-BECA-E65AACCD3955";
-        //***************************************************************
-        //                  DEMO VARIABLE FOR SHOWCASE
-        //***************************************************************
-        // demo=true to slow down the automation to waitTime in ms between steps.
-        int waitTime = 1000;
+
 
         //***************************************************************
         //                  CHROME DRIVER INIT
@@ -154,7 +159,7 @@ public class BTACreationWithOutlook {
             driver.findElement(By.id("idSIButton9")).click();
             Thread.sleep(500);
             //Stay signed in Click - NO
-            //Check for one of the buttons, if it isnt there do the other one.
+            //Check for one of the buttons, if it isn't there do the other one.
             int elem=driver.findElements(By.xpath("/html/body/div[1]/div/div[2]/div[1]/div/div/div/div/div[2]/div[2]/div/div/form/div[3]/div[2]/div/div[1]/button")).size();
             if (elem==1){
                 driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/div[1]/div/div/div/div/div[2]/div[2]/div/div/form/div[3]/div[2]/div/div[1]/button")).click();
@@ -317,7 +322,6 @@ public class BTACreationWithOutlook {
             // Create JSON object  as string needed for ESP
             String enrolmentJson = "{\"userId\" : \"" + userId + "\", \"type\" : \"principal\", \"action\" : \"enrolAndActivate\"}";
 
-
             // Open new link for Enrollment Store Proxy (ESP) on Gov gateway API
             driver.get(btaCreationUrl);
             // Click ESP
@@ -344,9 +348,12 @@ public class BTACreationWithOutlook {
             //Click continue // ************* BTA ACCOUNT CREATED HERE
             driver.findElement(By.xpath("/html/body/div/main/div/div/div/div/form/div[2]/button")).click();
 
-            //If object isnt created end the script
+            //If object isn't created end the script
             if (!Objects.equals(driver.findElement(By.xpath("/html/body/pre")).getText(), "201 - Created")){
-                return "FAILED TO CREATE BTA DETAILS NOT SAVED";
+                // End timer and return script failure error
+                long finishTime = System.currentTimeMillis();
+                double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+                return "FAILED TO CREATE BTA DETAILS NOT SAVED. Time to Run Script:" + timeElapsedInSeconds + " seconds.";
             }
 
             //***************************************************************
@@ -376,10 +383,20 @@ public class BTACreationWithOutlook {
             buffedWriter.close();
             fileWriter.close();
 
-            // Return the input and results string
+            // Format the results string
             String result = "Demo Selected: " + demo + "\n";
             result += "BTA account created and saved details to  " + filepath + "\n";
             result += "GOV GATEWAY ID: " + govGatewayID + " VRN: " + VRNValue +"\n";
+
+
+            //***************************************************************
+            //                          END TIMER
+            //***************************************************************
+            long finishTime = System.currentTimeMillis();
+            double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+            result += "Time to Run Script: " + timeElapsedInSeconds + " seconds.";
+
+            // Return final result string
             return result;
         } catch (Exception e) {
             return "Error occurred while scraping the website.";

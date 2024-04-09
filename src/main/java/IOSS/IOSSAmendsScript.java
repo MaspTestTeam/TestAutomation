@@ -6,6 +6,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 
 
@@ -19,7 +20,6 @@ public class IOSSAmendsScript {
         boolean demoSelected = false; // Replace with your value
         String GGIDValue = "87 15 52 59 16 48"; // Replace with your value
         String VRNValue = "999111031"; // Use the same VRN used in previous script
-        String bpID = "100377803"; // Use this value to track the Business partner id for the BTA
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, VRNValue);
         System.out.println(result);
     }
@@ -33,8 +33,10 @@ public class IOSSAmendsScript {
         int waitTime = 1000;
 
         //***************************************************************
-        //                  VARIABLES & .env LOADED
+        //              VARIABLES & .env LOADED & TIMER
         //***************************************************************
+        // Start Timer
+        long startTime = System.currentTimeMillis();
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayBTAStartPoint = dotenv.get("RETURNS_URL"); // Start point to LOG INTO BTA
@@ -51,7 +53,9 @@ public class IOSSAmendsScript {
         options.addArguments( "incognito");
         WebDriver driver = new ChromeDriver(options);
         // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
-        //driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
+        // Full screen window
+        driver.manage().window().maximize();
 
         //***************************************************************
         //******************* AUTOMATION START POINT ********************
@@ -60,8 +64,6 @@ public class IOSSAmendsScript {
         //***************************************************************
         // Open start point URL but log in this time.
         driver.get(govGatewayBTAStartPoint);
-        String govGatewayBTAWindowHandle = driver.getWindowHandle();
-
         //clear cookie banner if demo so screen can be seen clearer
         if (demo){
             // Accept cookies
@@ -101,7 +103,6 @@ public class IOSSAmendsScript {
         ArrayList<String> tabs = new ArrayList<String> (driver.getWindowHandles());
         driver.switchTo().window(tabs.get(1)); //switches to new tab
         driver.get(iossAmendsLink);
-        String govGatewayIOSSAmendsWindowHandle = driver.getWindowHandle();
 
         // Change contact name
         Thread.sleep(1000);
@@ -117,7 +118,14 @@ public class IOSSAmendsScript {
         String result = "Demo Selected: " + demo + "\n";
         result += "IOSS AMEND ACCOUNT SCRIPT RAN" + "\n";
         result += "GOV GATEWAY ID: " + govGatewayID + " VRN: " + VRNValue +"\n";
-        return result;
+        //***************************************************************
+        //                          END TIMER
+        //***************************************************************
+        long finishTime = System.currentTimeMillis();
+        double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+        result += "Time to Run Script: " + timeElapsedInSeconds + " seconds.";
 
+        // Return final result string
+        return result;
     }
 }
