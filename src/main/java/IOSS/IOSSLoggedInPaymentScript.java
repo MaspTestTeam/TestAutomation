@@ -50,8 +50,10 @@ public class IOSSLoggedInPaymentScript {
         int waitTime = 1000;
 
         //***************************************************************
-        //                  VARIABLES & .env LOADED
+        //               VARIABLES & .env LOADED & TIMER
         //***************************************************************
+        // Start Timer
+        long startTime = System.currentTimeMillis();
         // Initialise Decimal formatting for rounding payments later
         DecimalFormat df = new DecimalFormat("0.00");
         // Variables loaded in from .env
@@ -243,11 +245,19 @@ public class IOSSLoggedInPaymentScript {
             fileWriter.close();
 
             // Return the input and results string
-            result += "GOV GATEWAY ID: " + govGatewayID + " PaymentRef: " + paymentReference + " Saved to: " + filepath;
+            result += "GOV GATEWAY ID: " + govGatewayID + " PaymentRef: " + paymentReference + " Saved to: " + filepath +'\n';
         } else{
             result += "IOSS PAYMENT SCRIPT RAN AND FAILED"+ "\n";
         }
 
+        //***************************************************************
+        //                          END TIMER
+        //***************************************************************
+        long finishTime = System.currentTimeMillis();
+        double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+        result += "Time to Run Script: " + timeElapsedInSeconds + " seconds.";
+
+        // Return final result string
         return result;
     }
 }

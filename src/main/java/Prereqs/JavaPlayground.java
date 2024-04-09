@@ -1,16 +1,20 @@
 package Prereqs;
 
+import com.google.common.base.Stopwatch;
+
 import java.util.Arrays;
 
 //THIS SCRIPT IS AN INDEPENDENT SCRIPT THAT CAN BE USED TO WRITE SMALL FUNCTIONS OR TEST
 // PARTICULAR JAVA SYNTAX BEHAVIOUR.
 public class JavaPlayground {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+        
         String firstAmountTraded = "100.56";
         String secondAmountTraded = "100.00";
         double totalAmount = Double.parseDouble(firstAmountTraded) + Double.parseDouble(secondAmountTraded);
         System.out.println(totalAmount);
+
 
         String exampleDateText = "For example, 1 3 2024";
         //Parse the string to get three values, 1, 3, 2024
@@ -26,8 +30,13 @@ public class JavaPlayground {
         Double amountToPay = Double.parseDouble("32")*(40/100d);
         System.out.println(amountToPay);
 
-        // TODO: Create a function that will start a timer and then stop the timer and return the time passed
-        // This will give me accurate tim taken to run each script for data and clarity
+
+        long startTime = System.currentTimeMillis();
+        Thread.sleep(1234);
+        long finishTime = System.currentTimeMillis();
+        double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+        System.out.println("Time to Run Script: " + timeElapsedInSeconds + " seconds.");
+
 
 
 

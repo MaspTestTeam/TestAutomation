@@ -55,10 +55,10 @@ public class IOSSLoggedOutPaymentScript {
 
 
         //***************************************************************
-        //                  VARIABLES & .env LOADED
+        //              VARIABLES & .env LOADED & TIMER
         //***************************************************************
-        // Initialise Decimal formatting for rounding payments later
-        DecimalFormat df = new DecimalFormat("0.00");
+        // Start Timer
+        long startTime = System.currentTimeMillis();
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayStartPoint = dotenv.get("LOGGED_OUT_PAYMENT"); // Start point for logged out trader
@@ -229,11 +229,19 @@ public class IOSSLoggedOutPaymentScript {
             fileWriter.close();
 
             // Return the input and results string
-            result += "GOV GATEWAY ID: " + "Logged Out" + " PaymentRef: " + paymentReference + " Saved to: " + filepath;
+            result += "GOV GATEWAY ID: " + "Logged Out" + " PaymentRef: " + paymentReference + " Saved to: " + filepath + '\n';
         } else{
-            result += "IOSS PAYMENT LOGGED OUT SCRIPT RAN AND FAILED"+ "\n";
+            result += "IOSS PAYMENT LOGGED OUT SCRIPT RAN AND FAILED" + "\n";
         }
 
+        //***************************************************************
+        //                          END TIMER
+        //***************************************************************
+        long finishTime = System.currentTimeMillis();
+        double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+        result += "Time to Run Script: " + timeElapsedInSeconds + " seconds.";
+
+        // Return final result string
         return result;
     }
 }
