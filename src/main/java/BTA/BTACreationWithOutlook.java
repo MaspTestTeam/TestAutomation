@@ -1,4 +1,4 @@
-package BTA.Prereqs;
+package BTA;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.By;

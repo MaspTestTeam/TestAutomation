@@ -1,6 +1,6 @@
 package UI;
 
-import BTA.Prereqs.BTACreationWithOutlook;
+import BTA.BTACreationWithOutlook;
 
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
