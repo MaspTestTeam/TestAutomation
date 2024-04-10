@@ -70,7 +70,7 @@ public class IOSSLoggedOutPaymentScript {
         //                  FILE READER AND WRITER INIT
         //***************************************************************
         //filepath to be edited
-        String filepath ="evidence/IOSS/Payments/payment_references.txt";
+        String filepath ="evidence/IOSS/Payments/oss_payment_references.txt";
         File file = new File(filepath);
         //class to write to the file loaded
         FileWriter fileWriter = new FileWriter(file, true);
