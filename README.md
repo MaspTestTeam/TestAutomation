@@ -59,6 +59,25 @@ The same steps for OSS are repeated as above but using the OSSRegistrationScript
 ![OSS_Return_Output](assets/OSS_return_output.PNG)
 6. If you need to make a return to 2 countries then you can use the OSSMakeReturnTwoCountriesScript.java and follow the same steps as above.
 
+### Making a payment
+**NOTE:** The OSS and IOSS script structure is the same. For this example I will demonstrate the OSS behaviour.
+1. To make a payment you will need a Gov GatewayID of the account making a payment.
+2. The account needs to have payments due, one or multiple. The script will pay the most overdue.
+3. You can pay partially or full. To pay full set the percentPayment to 100, this means 100%.
+![OSS_Payment_Input](assets/OSS_return_input.PNG)
+4. If you want a screenshot you can set the takeScreenShot variable to true.
+5. Sit Back and wait for the script to run. It will collect the payment reference always on completion and put it in evidence/OSS/Payments/oss_payment_references.txt
+![OSS_Payment_Output](assets/OSS_payment_output.PNG)
+6. Note: Screenshots will be saved to evidence/screenshots/OSS/Payments and look like the example below.
+![OSS_Payment_Screenshot_Example](assets/OSS_payment_screenshot_example.PNG)
+
+## Taking Screenshots
+Currently, you can take a screenshot in the payment scripts only.
+Registrations and returns are a work in progress but will follow the same principles and structure.
+To take a screenshot of your final payment/return/registration reference all you need to do it set the takeScreenShot variable to true.
+By default, these variables are false which will prevent unnecessary extra files being added.
+All screenshots are saved to the screenshot folders within evidence/screenshots.
+
 ## Editing the scripts
 Once the project is set up you can create accounts you are free to use the project how you want. You can create a new script or edit ones already there.
 
