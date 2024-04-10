@@ -217,7 +217,7 @@ public class IOSSLoggedOutPaymentScript {
 
 
         //***************************************************************
-        //                     SAVE RETURN DETAILS
+        //                     SAVE PAYMENT DETAILS
         //***************************************************************
         // If payment completes then save details
         String result = "Demo Selected: " + demo + "\n";
