@@ -45,6 +45,7 @@ For this example I will demonstrate the IOSS registration.
 4. To find the information and details for the IOSS registration they are saved to accounts/ioss_created_Accounts.txt.
 ![Created IOSS](assets/created_IOSS_accounts.PNG)
 5. You can edit this file with any notes you want, it is not read by any script and only wrote to with new accounts appended to the bottom.
+6. Note: Screenshots will be saved to evidence/screenshots/IOSS/Registrations
 
 The same steps for OSS are repeated as above but using the OSSRegistrationScript and details are saved to oss_Created_accounts.txt.
 
@@ -72,8 +73,8 @@ The same steps for OSS are repeated as above but using the OSSRegistrationScript
 ![OSS_Payment_Screenshot_Example](assets/OSS_payment_screenshot_example.PNG)
 
 ## Taking Screenshots
-Currently, you can take a screenshot in the payment scripts only.
-Registrations and returns are a work in progress but will follow the same principles and structure.
+Currently, you can take a screenshot in the payment and registrations scripts only.
+Returns are a work in progress but will follow the same principles and structure.
 To take a screenshot of your final payment/return/registration reference all you need to do it set the takeScreenShot variable to true.
 By default, these variables are false which will prevent unnecessary extra files being added.
 All screenshots are saved to the screenshot folders within evidence/screenshots.
