@@ -1,11 +1,10 @@
 package IOSS;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.io.FileHandler;
 import org.openqa.selenium.support.ui.Select;
 
 import java.io.BufferedWriter;
@@ -21,11 +20,14 @@ import java.util.Objects;
 
 // ************************************************************
 // note: THIS SCRIPT WILL ALWAYS DO THE MOST OUTSTANDING PAYMENT ON THE ACCOUNT
+// YOU MUST KNOW HOW MUCH IS OWED BEFORE RUNNING THE SCRIPT
 // THIS SCRIPT WILL MAKE A PAYMENT USING CREDIT CARD DETAILS WITHOUT LOGGING IN
 // THE PAYMENT CAN BE FULL OR PARTIAL YOU MUST KNOW THE OUTSTANDING AMOUNT AHEAD OF TIME
 // TO COMPLETE A PAYMENT IT MUST BE PROCESSED CORRECTLY
 // THIS REQUIRES PAYMENT SERVICE AND THEN ETMP TO PROCESS
 // UNTIL THE PAYMENT IN PROCESSED THE PAYMENT WILL BE OUTSTANDING IN YOUR ACCOUNT
+// YOU CAN SCREENSHOT THE FINAL PAYMENT REFERENCE IF YOU WANT
+// BY SETTING THE takeScreenShot VARIABLE TO TRUE (FALSE BY DEFAULT)
 // ************************************************************
 public class IOSSLoggedOutPaymentScript {
 
@@ -34,18 +36,23 @@ public class IOSSLoggedOutPaymentScript {
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
-        boolean demoSelected = false; // Replace with your value
+        boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
+        boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
         String IOSSNumber = "IM9000004151"; // This script requires you to have your IOSS reference number not GGid
         String periodMonth = "1"; // Which month you want to pay the outstanding payment
         String periodYear = "2024"; // Which year you want to pay the outstanding payment.
         String paymentAmount = "10.00"; // Must be in the form of xx.xx to work.
-        String result = seleniumScript.executeSeleniumScript(demoSelected, IOSSNumber, periodMonth, periodYear, paymentAmount);
+
+        // Run the selenium script
+        String result = seleniumScript.executeSeleniumScript(demoSelected, takeScreenShot, IOSSNumber, periodMonth, periodYear, paymentAmount);
+        // Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
 
 
+    // The automation script that will execute the steps via selenium
     public String executeSeleniumScript(
-            boolean demo, String IOSSNumber, String periodMonth, String periodYear, String paymentAmount
+            boolean demo, boolean takeScreenShot, String IOSSNumber, String periodMonth, String periodYear, String paymentAmount
     ) throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
@@ -70,7 +77,7 @@ public class IOSSLoggedOutPaymentScript {
         //                  FILE READER AND WRITER INIT
         //***************************************************************
         //filepath to be edited
-        String filepath ="evidence/IOSS/Payments/oss_payment_references.txt";
+        String filepath ="evidence/IOSS/Payments/ioss_payment_references.txt";
         File file = new File(filepath);
         //class to write to the file loaded
         FileWriter fileWriter = new FileWriter(file, true);
@@ -122,6 +129,8 @@ public class IOSSLoggedOutPaymentScript {
         if (demo) { Thread.sleep(waitTime); }
         //Click continue
         driver.findElement(By.id("next")).click();
+
+
 
         // Which VAT period do you want to pay?
         //Enter the month
@@ -221,7 +230,7 @@ public class IOSSLoggedOutPaymentScript {
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String createdAt = dateTimeNow.format(dateTimeFormat);
             // Create a formatted string to save
-            String accountDetailsCreated = "Logged Out" + '\t' + '\t'+ '\t'+ IOSSNumber + '\t' + paymentReference + '\t' + paymentAmount + '\t' + '\t' + createdAt;
+            String accountDetailsCreated = "Logged Out" + '\t' + '\t' + '\t' + IOSSNumber + '\t' + paymentReference + '\t' + paymentAmount + '\t' + '\t' + createdAt + '\t' + "false" + '\t' + '\t' + "none";
             //write the string to the file
             buffedWriter.write(accountDetailsCreated);
             //start a new line so the next variable appended is on a new line
@@ -229,6 +238,27 @@ public class IOSSLoggedOutPaymentScript {
             //close classes once file has been edited
             buffedWriter.close();
             fileWriter.close();
+
+
+            //***************************************************************
+            //             TAKE AND SAVE SCREENSHOT OF PAYMENT
+            //***************************************************************
+            //Check if user wants screenshot before taking the screenshot of the final payment
+            if (takeScreenShot){
+                // Scroll down to view more information on the screen
+                // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
+                ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)");
+                // Take screenshot
+                TakesScreenshot screenshotDriver = (TakesScreenshot) driver;
+                File screenshotFile = screenshotDriver.getScreenshotAs(OutputType.FILE);
+                // Save screenshot
+                try {
+                    FileHandler.copy(screenshotFile, new File("evidence/screenshots/IOSS/Payments/IOSSPayment_LoggedOut_"+paymentReference+".png"));
+                    result += "Screenshot Saved to: " + "evidence/screenshots/IOSS/Payments/IOSSPayment_LoggedOut_"+paymentReference+".png"+'\n';
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
 
             // Return the input and results string
             result += "GOV GATEWAY ID: " + "Logged Out" + " PaymentRef: " + paymentReference + " Saved to: " + filepath + '\n';
