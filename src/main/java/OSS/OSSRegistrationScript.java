@@ -4,6 +4,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.io.FileHandler;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,25 +24,30 @@ import java.time.format.DateTimeFormatter;
 // DEMO BEING TRUE WILL SLOW THE AUTOMATION DOWN TO SEE WHAT'S HAPPENING.
 // THIS WILL OUTPUT A FILE THAT PRINTS OUT DETAILS FOR A NEW OSS ACCOUNT
 // NOTE: THIS SCRIPT ONLY WORKS IS EMAIL VERIFICATION IS TURNED OFF
+// YOU CAN SCREENSHOT THE FINAL PAYMENT REFERENCE IF YOU WANT
+// BY SETTING THE takeScreenShot VARIABLE TO TRUE (FALSE BY DEFAULT)
 // ******************************************************************
 public class OSSRegistrationScript {
-
     public static void main(String[] args) throws IOException, InterruptedException {
         OSSRegistrationScript seleniumScript = new OSSRegistrationScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
-        boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "29 29 16 24 99 89"; // Replace with your value
+        boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
+        boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
+        String GGIDValue = "29 29 16 24 99 89"; // Replace with the GGId of the account you're using
         String VRNValue = "900000107"; // Use the same VRN used in previous script
         String bpId = "100357269";  // bpID for the account created linked to vrn
-        String result = seleniumScript.executeSeleniumScript(
-                demoSelected, GGIDValue, VRNValue, bpId);
+
+        // Run the selenium script
+        String result = seleniumScript.executeSeleniumScript(demoSelected, takeScreenShot, GGIDValue, VRNValue, bpId);
+        // Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
 
+    // The automation script that will execute the steps via selenium
     public String executeSeleniumScript(
-            boolean demo, String govGatewayID, String VRNValue, String BPid)
+            boolean demo, boolean takeScreenShot, String govGatewayID, String VRNValue, String BPid)
             throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
@@ -92,7 +98,7 @@ public class OSSRegistrationScript {
         //***************************************************************
         //                      OSS REGISTRATION
         //***************************************************************
-        // Re-open start point URL but log in this time.
+        // Open start point URL but log in this time.
         driver.get(govGatewayStartPointURL);
 
         //clear cookie banner if demo so screen can be seen clearer
@@ -268,8 +274,29 @@ public class OSSRegistrationScript {
         fileWriter.close();
 
 
-        // Include demoSelected and gatewayIDValue in the result
+        //***************************************************************
+        //             TAKE AND SAVE SCREENSHOT OF REG
+        //***************************************************************
         String result = "Demo Selected: " + demo + "\n";
+        //Check if user wants screenshot before taking the screenshot of the final payment
+        if (takeScreenShot){
+            Thread.sleep(10000);
+            // Scroll down to view more information on the screen
+            // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
+            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)");
+            // Take screenshot
+            TakesScreenshot screenshotDriver = (TakesScreenshot) driver;
+            File screenshotFile = screenshotDriver.getScreenshotAs(OutputType.FILE);
+            // Save screenshot
+            try {
+                FileHandler.copy(screenshotFile, new File("evidence/screenshots/OSS/Registrations/OSSReg_WithFE_"+VRNValue+".png"));
+                result += "Screenshot Saved to: " + "evidence/screenshots/OSS/Registrations/OSSReg_WithFE_"+VRNValue+".png"+'\n';
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        // Include demoSelected and gatewayIDValue in the result
         result += "OSS Account created with Gov GatewayID: " + govGatewayID + "\n";
         result += "Details saved to: " + filepath + "\n";
 

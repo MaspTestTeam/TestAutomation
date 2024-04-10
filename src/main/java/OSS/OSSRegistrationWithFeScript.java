@@ -1,10 +1,10 @@
 package OSS;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.io.FileHandler;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,25 +24,34 @@ import java.time.format.DateTimeFormatter;
 // DEMO BEING TRUE WILL SLOW THE AUTOMATION DOWN TO SEE WHAT'S HAPPENING.
 // THIS WILL OUTPUT A FILE THAT PRINTS OUT DETAILS FOR A NEW OSS ACCOUNT
 // NOTE: THIS SCRIPT ONLY WORKS IS EMAIL VERIFICATION IS TURNED OFF
+// YOU CAN SCREENSHOT THE FINAL PAYMENT REFERENCE IF YOU WANT
+// BY SETTING THE takeScreenShot VARIABLE TO TRUE (FALSE BY DEFAULT)
 // ******************************************************************
 public class OSSRegistrationWithFeScript {
-
     public static void main(String[] args) throws IOException, InterruptedException {
         OSSRegistrationWithFeScript seleniumScript = new OSSRegistrationWithFeScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
-        boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "21 39 10 08 57 15"; // Replace with your value
+        boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
+        boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
+        String GGIDValue = "21 39 10 08 57 15"; // Replace with the GGId of the account you're using
         String VRNValue = "833311170"; // Use the same VRN used in previous script
         String bpId = "100347880";  // bpID for the account created linked to vrn
         String FeCountry = "Austria"; // The country your using as fixed establishment
         String FeVATNumber = "ATU12345678"; // The VAT number used to register in the FE country
-        String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, VRNValue, bpId, FeCountry, FeVATNumber);
+
+        // Run the selenium script
+        String result = seleniumScript.executeSeleniumScript(demoSelected, takeScreenShot, GGIDValue, VRNValue, bpId, FeCountry, FeVATNumber);
+        // Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
 
-    public String executeSeleniumScript(boolean demo, String govGatewayID, String VRNValue, String BPid, String FeCountry, String FeVATNumber) throws IOException, InterruptedException {
+
+    // The automation script that will execute the steps via selenium
+    public String executeSeleniumScript(
+            boolean demo, boolean takeScreenShot, String govGatewayID, String VRNValue, String BPid, String FeCountry, String FeVATNumber
+    ) throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
         //***************************************************************
@@ -302,7 +311,7 @@ public class OSSRegistrationWithFeScript {
 
         // Click continue
         driver.findElement(By.id("continue")).click();
-        Thread.sleep(4000); //Wait for code forwarding
+        Thread.sleep(2000); //Wait for code forwarding
 
         // Name on the account
         Thread.sleep(2000);
@@ -335,11 +344,33 @@ public class OSSRegistrationWithFeScript {
         buffedWriter.close();
         fileWriter.close();
 
-        // Include demoSelected and gatewayIDValue in the result
+
+        //***************************************************************
+        //             TAKE AND SAVE SCREENSHOT OF REG
+        //***************************************************************
         String result = "Demo Selected: " + demo + "\n";
+        //Check if user wants screenshot before taking the screenshot of the final payment
+        if (takeScreenShot){
+            Thread.sleep(6000);
+            // Scroll down to view more information on the screen
+            // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
+            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)");
+            // Take screenshot
+            TakesScreenshot screenshotDriver = (TakesScreenshot) driver;
+            File screenshotFile = screenshotDriver.getScreenshotAs(OutputType.FILE);
+            // Save screenshot
+            try {
+                FileHandler.copy(screenshotFile, new File("evidence/screenshots/OSS/Registrations/OSSReg_WithFE_"+VRNValue+".png"));
+                result += "Screenshot Saved to: " + "evidence/screenshots/OSS/Registrations/OSSReg_WithFE_"+VRNValue+".png"+'\n';
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+
+        // Include demoSelected and gatewayIDValue in the result
         result += "OSS Account created with Gov GatewayID: " + govGatewayID + "\n";
         result += "Details saved to: " + filepath + "\n";
-
 
         //***************************************************************
         //                          END TIMER
