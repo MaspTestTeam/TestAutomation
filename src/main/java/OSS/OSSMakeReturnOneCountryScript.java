@@ -27,7 +27,6 @@ import java.util.Objects;
 // BY SETTING THE takeScreenShot VARIABLE TO TRUE (FALSE BY DEFAULT)
 // ********************************************************************
 public class OSSMakeReturnOneCountryScript {
-
     public static void main(String[] args) throws IOException, InterruptedException {
         OSSMakeReturnOneCountryScript seleniumScript = new OSSMakeReturnOneCountryScript();
         //***************************************************************
@@ -35,7 +34,7 @@ public class OSSMakeReturnOneCountryScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
-        String GGIDValue = "59 77 26 31 87 44"; // Replace with the GGId of the account you're using
+        String GGIDValue = "97 35 24 81 61 39"; // Replace with the GGId of the account you're using
         String countryTradedWith = "Portugal";   // Country you are declaring trading with (make sure the first letter is capitalised)
         String amountTraded = "1000.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
 
@@ -184,22 +183,12 @@ public class OSSMakeReturnOneCountryScript {
         if (!previousReturnInputs.isEmpty()){
             driver.findElement(By.id("value-no")).click();
             if (demo) { Thread.sleep(waitTime); }
-            //Click continue
-            driver.findElement(By.id("continue")).click();
-            // Check your answers and click submit
-            if (demo) { Thread.sleep(waitTime); }
-            //Click continue
-            driver.findElement(By.id("continue")).click();
-            // Click submit
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        } else{
-            // Check your answers and click submit
-            if (demo) { Thread.sleep(waitTime); }
-            //Click submit
-            //System.out.println("SKIPPED PREVIOUS RETURNS CLICK SUBMIT");
             driver.findElement(By.id("continue")).click();
         }
+
+        // Check your answers and click submit
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
 
         /*
         // THIS COMMENT CAN BE UNCOMMENTED OUT TO ADD A TRADE DECLARED BETWEEN TWO COUNTRIES NOT NI AND SOMEWHERE

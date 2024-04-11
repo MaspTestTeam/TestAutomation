@@ -35,9 +35,9 @@ public class OSSMakeReturnTwoCountriesScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
-        boolean takeScreenShot = true; // If you want a screenshot of the completed payment change this to true.
-        String GGIDValue = "59 77 26 31 87 44"; // Replace with the GGId of the account you're using
-        String firstCountryTradedWith = "Portugal";   // Country you are declaring trading with first (make sure the first letter is capitalised)
+        boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
+        String GGIDValue = "97 35 24 81 61 39"; // Replace with the GGId of the account you're using
+        String firstCountryTradedWith = "Finland";   // Country you are declaring trading with first (make sure the first letter is capitalised)
         String firstAmountTraded = "1000.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
         String secondCountryTradedWith = "Sweden";   // Country you are declaring trading with second (make sure the first letter is capitalised)
         String secondAmountTraded = "5500.00";   // Goods traded in pounds(£), remember the pence in the number (.00))
@@ -156,6 +156,12 @@ public class OSSMakeReturnTwoCountriesScript {
         // Function that will run all the steps needed to declare a trade with a country
         declareTradeWithCountry(driver, demo, waitTime, secondCountryTradedWith, secondAmountTraded);
 
+        // Add sales from Northern Ireland to another EU country?
+        // Click no
+        driver.findElement(By.id("value-no")).click();
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
+
         //Did you make eligible sales from an EU country to other EU countries during this period?
         //Click no
         driver.findElement(By.id("value-no")).click();
@@ -169,26 +175,12 @@ public class OSSMakeReturnTwoCountriesScript {
         if (!previousReturnInputs.isEmpty()){
             driver.findElement(By.id("value-no")).click();
             if (demo) { Thread.sleep(waitTime); }
-            //Click continue
-            driver.findElement(By.id("continue")).click();
-            // Check your answers and click submit
-            if (demo) { Thread.sleep(waitTime); }
-            //Click continue
-            driver.findElement(By.id("continue")).click();
-            // Click submit
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        } else{
-            // Check your answers and click submit
-            if (demo) { Thread.sleep(waitTime); }
-            //Click submit
-            //System.out.println("SKIPPED PREVIOUS RETURNS CLICK SUBMIT");
             driver.findElement(By.id("continue")).click();
         }
 
-        //Click submit
-        //System.out.println("SKIPPED PREVIOUS RETURNS CLICK SUBMIT");
-        //driver.findElement(By.id("continue")).click();
+        // Check your answers and click submit
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
 
 
         //***************************************************************
