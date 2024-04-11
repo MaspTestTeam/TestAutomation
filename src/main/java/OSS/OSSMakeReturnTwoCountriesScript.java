@@ -1,11 +1,10 @@
 package OSS;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.io.FileHandler;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,28 +23,36 @@ import java.util.List;
 // THE ACCOUNT CAN HAVE ONE OR MULTIPLE OUTSTANDING RETURN
 // THE SCRIPT WILL AUTOMATICALLY COMPLETE THE EARLIEST OUTSTANDING RETURN
 // THE RETURN REFERENCE WILL BE SAVED  TO A FILE IN THE EVIDENCE FOLDERS
+// YOU CAN SCREENSHOT THE FINAL PAYMENT REFERENCE IF YOU WANT
+// BY SETTING THE takeScreenShot VARIABLE TO TRUE (FALSE BY DEFAULT)
 // ********************************************************************
 public class OSSMakeReturnTwoCountriesScript {
-
     public static void main(String[] args) throws IOException, InterruptedException {
         OSSMakeReturnTwoCountriesScript seleniumScript = new OSSMakeReturnTwoCountriesScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
-        boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "75 46 24 97 58 71"; // Replace with your value
+        boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
+        boolean takeScreenShot = true; // If you want a screenshot of the completed payment change this to true.
+        String GGIDValue = "61 22 67 89 61 11"; // Replace with the GGId of the account you're using
         String firstCountryTradedWith = "Portugal";   // Country you are declaring trading with first (make sure the first letter is capitalised)
         String firstAmountTraded = "1000.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
         String secondCountryTradedWith = "Finland";   // Country you are declaring trading with second (make sure the first letter is capitalised)
         String secondAmountTraded = "1200.00";   // Goods traded in pounds(£), remember the pence in the number (.00))
+
+        // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(
-                demoSelected, GGIDValue, firstCountryTradedWith, firstAmountTraded, secondCountryTradedWith, secondAmountTraded
+                demoSelected, takeScreenShot, GGIDValue, firstCountryTradedWith, firstAmountTraded, secondCountryTradedWith, secondAmountTraded
         );
+
+        // Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
 
+
+    // The automation script that will execute the steps via selenium
     public String executeSeleniumScript(
-            boolean demo, String govGatewayID, String firstCountryTradedWith, String firstAmountTraded, String secondCountryTradedWith, String secondAmountTraded
+            boolean demo, boolean takeScreenShot, String govGatewayID, String firstCountryTradedWith, String firstAmountTraded, String secondCountryTradedWith, String secondAmountTraded
     ) throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
@@ -84,7 +91,7 @@ public class OSSMakeReturnTwoCountriesScript {
         //                  FILE READER AND WRITER INIT
         //***************************************************************
         //filepath to be edited
-        String filepath ="evidence/OSS/Returns/return_references.txt";
+        String filepath ="evidence/OSS/Returns/oss_return_references.txt";
         File file = new File(filepath);
         //class to write to the file loaded
         FileWriter fileWriter = new FileWriter(file, true);
@@ -182,7 +189,7 @@ public class OSSMakeReturnTwoCountriesScript {
         // Find the total amount of the return to two countries
         double totalAmount = Double.parseDouble(firstAmountTraded) + Double.parseDouble(secondAmountTraded);
         // Create a formatted string to save
-        String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + totalAmount + '\t' + '\t' + '\t' + createdAt;
+        String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + totalAmount + '\t' + '\t' + createdAt + '\t' + "false" + '\t' + "none";
         //write the string to the file
         buffedWriter.write(accountDetailsCreated);
         //start a new line so the next variable appended is on a new line
@@ -191,29 +198,31 @@ public class OSSMakeReturnTwoCountriesScript {
         buffedWriter.close();
         fileWriter.close();
 
-        /*
-        //UNCOMMENT THIS BLOCK IF YOU WANT A SCREENSHOT
         //***************************************************************
         //             TAKE AND SAVE SCREENSHOT OF RETURN
         //***************************************************************
-        Thread.sleep(2000); //give time for page to load
-        // Scroll down to view more information on the screen
-        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
-        jsExecutor.executeScript("arguments[0].scrollIntoView(true);", returnReference);
-        // Take screenshot
-        TakesScreenshot screenshotDriver = (TakesScreenshot) driver;
-        File screenshotFile = screenshotDriver.getScreenshotAs(OutputType.FILE);
-        // Save screenshot
-        try {
-            String GGIDNoSpaces = govGatewayID.replaceAll("\\s", "");
-            FileHandler.copy(screenshotFile, new File("evidence/returns/OSSReturn_"+GGIDNoSpaces +".png"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        String result = "Demo Selected: " + demo + "\n";
+        //Check if user wants screenshot before taking the screenshot of the final payment
+        if (takeScreenShot){
+            Thread.sleep(3000); //give time for page to load
+            // Scroll down to view more information on the screen
+            // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
+            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)");
+            // Take screenshot
+            TakesScreenshot screenshotDriver = (TakesScreenshot) driver;
+            File screenshotFile = screenshotDriver.getScreenshotAs(OutputType.FILE);
+            // Save screenshot
+            //Remove / From the return reference so the file can be saved correctly
+            String formattedReturnReference = returnReference.replace("/","");
+            try {
+                FileHandler.copy(screenshotFile, new File("evidence/screenshots/OSS/Returns/OSSReturn_"+govGatewayID+"_"+formattedReturnReference+".png"));
+                result += "Screenshot Saved to: " + "evidence/screenshots/OSS/Returns/OSSReturn_"+govGatewayID+"_"+formattedReturnReference+".png"+'\n';
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-         */
 
         // Include demoSelected and gatewayIDValue in the result
-        String result = "Demo Selected: " + demo + "\n";
         result += "GGID: " + govGatewayID + "\n";
         result += "Return made: "+ returnReference + " Saved to: " + filepath + '\n';
 
