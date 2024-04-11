@@ -35,9 +35,9 @@ public class OSSRegistrationScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
-        String GGIDValue = "29 29 16 24 99 89"; // Replace with the GGId of the account you're using
-        String VRNValue = "900000107"; // Use the same VRN used in previous script
-        String bpId = "100357269";  // bpID for the account created linked to vrn
+        String GGIDValue = "58 74 66 30 65 92"; // Replace with the GGId of the account you're using
+        String VRNValue = "889900128"; // Use the same VRN used in previous script
+        String bpId = "100347927";  // bpID for the account created linked to vrn
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, takeScreenShot, GGIDValue, VRNValue, bpId);
@@ -264,7 +264,7 @@ public class OSSRegistrationScript {
         DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String createdAt = dateTimeNow.format(dateTimeFormat);
         // Create a formatted string to save
-        String accountDetailsCreated = govGatewayID + '\t' + createdAt + '\t' + VRNValue + '\t' + BPid +"\t" + "false" + '\t'+'\t' +"false" +'\t'+'\t' + "none";
+        String accountDetailsCreated = govGatewayID + '\t' + createdAt + '\t' + VRNValue + '\t' + BPid +"\t" + "false" + '\t'+'\t'+'\t' +"false" +'\t'+'\t' + "none";
         //write the string to the file
         buffedWriter.write(accountDetailsCreated);
         //start a new line so the next variable appended is on a new line
@@ -283,14 +283,14 @@ public class OSSRegistrationScript {
             Thread.sleep(10000);
             // Scroll down to view more information on the screen
             // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
-            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)");
+            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,500)");
             // Take screenshot
             TakesScreenshot screenshotDriver = (TakesScreenshot) driver;
             File screenshotFile = screenshotDriver.getScreenshotAs(OutputType.FILE);
             // Save screenshot
             try {
-                FileHandler.copy(screenshotFile, new File("evidence/screenshots/OSS/Registrations/OSSReg_WithFE_"+VRNValue+".png"));
-                result += "Screenshot Saved to: " + "evidence/screenshots/OSS/Registrations/OSSReg_WithFE_"+VRNValue+".png"+'\n';
+                FileHandler.copy(screenshotFile, new File("evidence/screenshots/OSS/Registrations/OSSReg_"+VRNValue+".png"));
+                result += "Screenshot Saved to: " + "evidence/screenshots/OSS/Registrations/OSSReg_"+VRNValue+".png"+'\n';
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -354,7 +354,7 @@ public class OSSRegistrationWithFeScript {
             Thread.sleep(6000);
             // Scroll down to view more information on the screen
             // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
-            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)");
+            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,500)");
             // Take screenshot
             TakesScreenshot screenshotDriver = (TakesScreenshot) driver;
             File screenshotFile = screenshotDriver.getScreenshotAs(OutputType.FILE);
