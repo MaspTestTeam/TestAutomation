@@ -14,6 +14,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 // ********************************************************************
 // THIS SCRIPT WILL MAKE A NIL RETURN
@@ -33,7 +34,7 @@ public class OSSMakeNilReturnScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = true; // If you want a screenshot of the completed payment change this to true.
-        String GGIDValue = "61 22 67 89 61 11"; // Replace with the GGId of the account you're using
+        String GGIDValue = "58 74 66 30 65 92"; // Replace with the GGId of the account you're using
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected,takeScreenShot, GGIDValue);
@@ -101,7 +102,7 @@ public class OSSMakeNilReturnScript {
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("user_id")).sendKeys(govGatewayID);
         driver.findElement(By.id("password")).sendKeys(govGatewayPassword);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         driver.findElement(By.id("continue")).click();
         //Authentication code
         driver.findElement(By.id("oneTimePassword")).sendKeys(authenticationCode);
@@ -137,12 +138,20 @@ public class OSSMakeNilReturnScript {
         if (!previousReturnInputs.isEmpty()){
             driver.findElement(By.id("value-no")).click();
             if (demo) { Thread.sleep(waitTime); }
+            //Click continue
             driver.findElement(By.id("continue")).click();
-
+            // Check your answers and click submit
+            if (demo) { Thread.sleep(waitTime); }
+            Thread.sleep(1000);
+            // Click submit
+            driver.findElement(By.id("continue")).click();
+        } else{
+            // Check your answers and click submit
+            if (demo) { Thread.sleep(waitTime); }
+            //Click submit
+            System.out.println("SKIPPED PREVIOUS RETURNS CLICK SUBMIT");
+            driver.findElement(By.id("continue")).click();
         }
-        // Check your answers and click submit
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
 
 
         //***************************************************************

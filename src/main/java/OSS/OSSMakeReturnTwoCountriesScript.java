@@ -10,10 +10,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 // ********************************************************************
 // THIS SCRIPT WILL MAKE RETURN
@@ -34,11 +36,11 @@ public class OSSMakeReturnTwoCountriesScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = true; // If you want a screenshot of the completed payment change this to true.
-        String GGIDValue = "61 22 67 89 61 11"; // Replace with the GGId of the account you're using
+        String GGIDValue = "59 77 26 31 87 44"; // Replace with the GGId of the account you're using
         String firstCountryTradedWith = "Portugal";   // Country you are declaring trading with first (make sure the first letter is capitalised)
         String firstAmountTraded = "1000.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
-        String secondCountryTradedWith = "Finland";   // Country you are declaring trading with second (make sure the first letter is capitalised)
-        String secondAmountTraded = "1200.00";   // Goods traded in pounds(£), remember the pence in the number (.00))
+        String secondCountryTradedWith = "Sweden";   // Country you are declaring trading with second (make sure the first letter is capitalised)
+        String secondAmountTraded = "5500.00";   // Goods traded in pounds(£), remember the pence in the number (.00))
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(
@@ -66,6 +68,8 @@ public class OSSMakeReturnTwoCountriesScript {
         //***************************************************************
         // Start Timer
         long startTime = System.currentTimeMillis();
+        // Initialise Decimal formatting for rounding and formatting payments string
+        DecimalFormat df = new DecimalFormat("0.00");
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String returnsURL = dotenv.get("RETURNS_URL");
@@ -111,7 +115,7 @@ public class OSSMakeReturnTwoCountriesScript {
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("user_id")).sendKeys(govGatewayID);
         driver.findElement(By.id("password")).sendKeys(govGatewayPassword);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
         driver.findElement(By.id("continue")).click();
         //Authentication code
         driver.findElement(By.id("oneTimePassword")).sendKeys(authenticationCode);
@@ -165,16 +169,26 @@ public class OSSMakeReturnTwoCountriesScript {
         if (!previousReturnInputs.isEmpty()){
             driver.findElement(By.id("value-no")).click();
             if (demo) { Thread.sleep(waitTime); }
+            //Click continue
             driver.findElement(By.id("continue")).click();
-
+            // Check your answers and click submit
+            if (demo) { Thread.sleep(waitTime); }
+            //Click continue
+            driver.findElement(By.id("continue")).click();
+            // Click submit
+            if (demo) { Thread.sleep(waitTime); }
+            driver.findElement(By.id("continue")).click();
+        } else{
+            // Check your answers and click submit
+            if (demo) { Thread.sleep(waitTime); }
+            //Click submit
+            //System.out.println("SKIPPED PREVIOUS RETURNS CLICK SUBMIT");
+            driver.findElement(By.id("continue")).click();
         }
-        // Check your answers and click submit
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
 
-        // Click submit
-        Thread.sleep(1200);
-        driver.findElement(By.id("continue")).click();
+        //Click submit
+        //System.out.println("SKIPPED PREVIOUS RETURNS CLICK SUBMIT");
+        //driver.findElement(By.id("continue")).click();
 
 
         //***************************************************************
@@ -188,8 +202,10 @@ public class OSSMakeReturnTwoCountriesScript {
         String returnReference = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/div[1]/div/div/strong")).getText();
         // Find the total amount of the return to two countries
         double totalAmount = Double.parseDouble(firstAmountTraded) + Double.parseDouble(secondAmountTraded);
+        //Format the string so that the payment is £xx.xx as a string to input
+        String totalAmountString = df.format(totalAmount);
         // Create a formatted string to save
-        String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + totalAmount + '\t' + '\t' + createdAt + '\t' + "false" + '\t' + "none";
+        String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + totalAmountString + '\t' + '\t' + createdAt + '\t' + "false" + '\t' + "none";
         //write the string to the file
         buffedWriter.write(accountDetailsCreated);
         //start a new line so the next variable appended is on a new line

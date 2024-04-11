@@ -13,19 +13,21 @@ import java.time.Duration;
 // CLICK THE VIEW OSS ACCOUNT DASHBOARD AND IF THAT FAILS
 // ************************************************************
 public class OSSDashboardLoginScript {
-
     public static void main(String[] args) throws IOException, InterruptedException {
         OSSDashboardLoginScript seleniumScript = new OSSDashboardLoginScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "75 46 24 97 58 71"; // Replace with your value for GGID
+        String GGIDValue = "58 74 66 30 65 92"; // Replace with your value for GGID
+
+        // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue);
+        //Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
 
-
+    // The automation script that will execute the steps via selenium
     public String executeSeleniumScript(boolean demo, String govGatewayID) throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
