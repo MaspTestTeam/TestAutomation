@@ -21,8 +21,6 @@ import java.util.Objects;
 
 // ******************************************************************
 // SCRIPT WILL CREATE A GOV GATEWAY ACCOUNT LINKED TO AN OUTLOOK EMAIL
-//  TAKES AT LEAST 8 HOURS TO BE FAST TO LOAD AFTER FIRST EMAIL ACCOUNT CREATED
-// CHANGE WAIT TILL TO 45 SECONDS FOR IT TO WORK.
 // ENSURE OUTLOOK INBOX IS EMPTY BEFORE RUNNING
 // SCRIPT WILL THEN MAKE THE BTA ACCOUNT LINKED TO THE GG ACCOUNT AS LONG
 // AS A VALID vrn AND LINKING BP IS ADDED TO THE SCRIPT ON CREATION
@@ -36,8 +34,8 @@ public class BTACreationWithOutlook {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = true; // Replace with your value
-        String VRNValue = "813311134"; // Replace with your VRN value
-        String BPValue = "100347299";   //Replace with your BP value
+        String VRNValue = "900000115"; // Replace with your VRN value
+        String BPValue = "100357716";   //Replace with your BP value
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(VRNValue, BPValue, demoSelected);

@@ -33,9 +33,9 @@ public class IOSSRegistrationScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
-        String GGIDValue = "29 29 16 24 99 89"; // Replace with the GGId of the account you're using
-        String VRNValue = "900000107"; // Use the same VRN used in previous script
-        String bpId = "100357269";  // bpID for the account created linked to vrn
+        String GGIDValue = "13 43 13 24 14 51"; // Replace with the GGId of the account you're using
+        String VRNValue = "900000115"; // Use the same VRN used in previous script
+        String bpId = "100357716";  // bpID for the account created linked to vrn
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, takeScreenShot, GGIDValue, VRNValue, bpId);
@@ -274,7 +274,7 @@ public class IOSSRegistrationScript {
             DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             String createdAt = dateTimeNow.format(dateTimeFormat);
             // Create a formatted string to save
-            String accountDetailsCreated = govGatewayID + '\t' + createdAt + '\t' + refNumber + '\t' + VRNvalue + '\t' + BPID +"\t" + "false" + '\t'+'\t' + "false" + '\t'+'\t'+"none";
+            String accountDetailsCreated = govGatewayID + '\t' + createdAt + '\t' + refNumber + '\t' + VRNvalue + '\t' + BPID +"\t" + "false" + '\t'+'\t' + "false" + '\t' +'\t'+'\t'+"none";
             //write the string to the file
             buffedWriter.write(accountDetailsCreated);
             //start a new line so the next variable appended is on a new line

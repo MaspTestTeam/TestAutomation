@@ -33,9 +33,9 @@ public class IOSSRegistrationWithFeScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
-        String GGIDValue = "29 29 16 24 99 89"; // Replace with the GGId of the account you're using
-        String VRNValue = "904529396"; // Use the same VRN used in previous script
-        String bpId = "100390314";  // bpID for the account created linked to vrn
+        String GGIDValue = "52 41 44 53 39 98"; // Replace with the GGId of the account you're using
+        String VRNValue = "900000109"; // Use the same VRN used in previous script
+        String bpId = "100357689";  // bpID for the account created linked to vrn
         String FeCountry = "Austria"; // The country your using as fixed establishment
         String FeVATNumber = "ATU12345678"; // The VAT number used to register in the FE country
 

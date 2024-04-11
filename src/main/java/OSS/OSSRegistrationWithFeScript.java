@@ -35,9 +35,9 @@ public class OSSRegistrationWithFeScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
-        String GGIDValue = "21 39 10 08 57 15"; // Replace with the GGId of the account you're using
-        String VRNValue = "833311170"; // Use the same VRN used in previous script
-        String bpId = "100347880";  // bpID for the account created linked to vrn
+        String GGIDValue = "97 35 24 81 61 39"; // Replace with the GGId of the account you're using
+        String VRNValue = "888649736"; // Use the same VRN used in previous script
+        String bpId = "100381963";  // bpID for the account created linked to vrn
         String FeCountry = "Austria"; // The country your using as fixed establishment
         String FeVATNumber = "ATU12345678"; // The VAT number used to register in the FE country
 
@@ -173,10 +173,15 @@ public class OSSRegistrationWithFeScript {
         // Click continue
         driver.findElement(By.id("continue")).click();
 
-        // Date of your first eligible sale since 1 July 2023
-        driver.findElement(By.id("value.day")).sendKeys("10");
-        driver.findElement(By.id("value.month")).sendKeys("1");
-        driver.findElement(By.id("value.year")).sendKeys("2024");
+        // Date of your first eligible sale
+        // This returns a string of the format "For example, 1 3 2024"
+        String exampleDateText = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/form/div[1]/fieldset/div[1]")).getText();
+        //Parse the string to get three values 1, 3, 2024 as an array [1, 3, 2024]
+        String[] dates = exampleDateText.split(",",2)[1].trim().split(" ", 3);
+        // Input the three example values
+        driver.findElement(By.id("value.day")).sendKeys(dates[0]);
+        driver.findElement(By.id("value.month")).sendKeys(dates[1]);
+        driver.findElement(By.id("value.year")).sendKeys(dates[2]);
         if (demo) { Thread.sleep(waitTime); }
         // Click continue
         driver.findElement(By.id("continue")).click();
@@ -351,7 +356,7 @@ public class OSSRegistrationWithFeScript {
         String result = "Demo Selected: " + demo + "\n";
         //Check if user wants screenshot before taking the screenshot of the final payment
         if (takeScreenShot){
-            Thread.sleep(6000);
+            Thread.sleep(10000);
             // Scroll down to view more information on the screen
             // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
             ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,500)");
