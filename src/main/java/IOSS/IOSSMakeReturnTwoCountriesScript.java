@@ -1,16 +1,16 @@
 package IOSS;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.io.FileHandler;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,6 +23,8 @@ import java.util.List;
 // THE ACCOUNT CAN HAVE ONE OR MULTIPLE OUTSTANDING RETURN
 // THE SCRIPT WILL AUTOMATICALLY COMPLETE THE EARLIEST OUTSTANDING RETURN
 // THE RETURN REFERENCE WILL BE SAVED  TO A FILE IN THE EVIDENCE FOLDERS
+// YOU CAN SCREENSHOT THE FINAL PAYMENT REFERENCE IF YOU WANT
+// BY SETTING THE takeScreenShot VARIABLE TO TRUE (FALSE BY DEFAULT)
 // ********************************************************************
 public class IOSSMakeReturnTwoCountriesScript {
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -30,21 +32,25 @@ public class IOSSMakeReturnTwoCountriesScript {
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
-        boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "85 48 22 53 42 71"; // Replace with your value
-        String firstCountryTradedWith = "Portugal";   // Country you are declaring trading with first (make sure the first letter is capitalised)
+        boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
+        boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
+        String GGIDValue = "85 48 22 53 42 71"; // Replace with the GGId of the account you're using
+        String firstCountryTradedWith = "Sweden";   // Country you are declaring trading with first (make sure the first letter is capitalised)
         String firstAmountTraded = "100.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
-        String secondCountryTradedWith = "Austria";   // Country you are declaring trading with second (make sure the first letter is capitalised)
+        String secondCountryTradedWith = "Finland";   // Country you are declaring trading with second (make sure the first letter is capitalised)
         String secondAmountTraded = "120.00";   // Goods traded in pounds(£), remember the pence in the number (.00))
+
+        // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(
-                demoSelected, GGIDValue, firstCountryTradedWith, firstAmountTraded, secondCountryTradedWith, secondAmountTraded
+                demoSelected, takeScreenShot, GGIDValue, firstCountryTradedWith, firstAmountTraded, secondCountryTradedWith, secondAmountTraded
         );
+        // Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
 
-
+    // The automation script that will execute the steps via selenium
     public String executeSeleniumScript(
-            boolean demo, String govGatewayID, String firstCountryTradedWith, String firstAmountTraded, String secondCountryTradedWith, String secondAmountTraded
+            boolean demo, boolean takeScreenShot, String govGatewayID, String firstCountryTradedWith, String firstAmountTraded, String secondCountryTradedWith, String secondAmountTraded
     ) throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
@@ -58,6 +64,8 @@ public class IOSSMakeReturnTwoCountriesScript {
         //***************************************************************
         // Start Timer
         long startTime = System.currentTimeMillis();
+        // Initialise Decimal formatting for rounding and formatting payments string
+        DecimalFormat df = new DecimalFormat("0.00");
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayBTAStartPoint = dotenv.get("RETURNS_URL"); // Start point to LOG INTO BTA
@@ -69,7 +77,7 @@ public class IOSSMakeReturnTwoCountriesScript {
         //                  FILE READER AND WRITER INIT
         //***************************************************************
         //filepath to be edited
-        String filepath ="evidence/IOSS/Returns/return_references.txt";
+        String filepath ="evidence/IOSS/Returns/ioss_return_references.txt";
         File file = new File(filepath);
         //class to write to the file loaded
         FileWriter fileWriter = new FileWriter(file, true);
@@ -194,8 +202,10 @@ public class IOSSMakeReturnTwoCountriesScript {
         String returnReference = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/div[1]/div/strong")).getText();
         // Get the total amount for the return
         double totalAmount = Double.parseDouble(firstAmountTraded) + Double.parseDouble(secondAmountTraded);
+        //Format the string so that the payment is £xx.xx as a string to input
+        String totalAmountString = df.format(totalAmount);
         // Create a formatted string to save
-        String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + totalAmount + '\t' + '\t' + '\t' + createdAt;
+        String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + totalAmountString + '\t' + '\t' + createdAt + '\t' + "false" + '\t' + "none";
         //write the string to the file
         buffedWriter.write(accountDetailsCreated);
         //start a new line so the next variable appended is on a new line
@@ -204,30 +214,33 @@ public class IOSSMakeReturnTwoCountriesScript {
         buffedWriter.close();
         fileWriter.close();
 
-        /*
-        //UNCOMMENT THIS BLOCK IF YOU WANT A SCREENSHOT OF THE RETURN
+
         //***************************************************************
         //             TAKE AND SAVE SCREENSHOT OF RETURN
         //***************************************************************
-        Thread.sleep(2000); //give time for page to load
-        // Scroll down to view more information on the screen
-        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
-        jsExecutor.executeScript("arguments[0].scrollIntoView(true);", returnReference);
-        // Take screenshot
-        TakesScreenshot screenshotDriver = (TakesScreenshot) driver;
-        File screenshotFile = screenshotDriver.getScreenshotAs(OutputType.FILE);
-        // Save screenshot
-        try {
-            String GGIDNoSpaces = govGatewayID.replaceAll("\\s", "");
-            FileHandler.copy(screenshotFile, new File("evidence/screenshots/IOSS/returns/IOSSReturn_"+GGIDNoSpaces+returnReference +".png"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        String result = "Demo Selected: " + demo + "\n";
+        //Check if user wants screenshot before taking the screenshot of the final payment
+        if (takeScreenShot){
+            Thread.sleep(3000); //give time for page to load
+            // Scroll down to view more information on the screen
+            // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
+            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)");
+            // Take screenshot
+            TakesScreenshot screenshotDriver = (TakesScreenshot) driver;
+            File screenshotFile = screenshotDriver.getScreenshotAs(OutputType.FILE);
+            // Save screenshot
+            //Remove / From the return reference so the file can be saved correctly
+            String formattedReturnReference = returnReference.replace("/","");
+            try {
+                FileHandler.copy(screenshotFile, new File("evidence/screenshots/IOSS/Returns/IOSSReturn_"+govGatewayID+"_"+formattedReturnReference+".png"));
+                result += "Screenshot Saved to: " + "evidence/screenshots/IOSS/Returns/IOSSReturn_"+govGatewayID+"_"+formattedReturnReference+".png"+'\n';
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        */
 
 
         // Return the input and results string
-        String result = "Demo Selected: " + demo + "\n";
         result += "GOV GATEWAY ID: " + govGatewayID + "\n";
         result += "Return made: "+ returnReference + " Saved to: " + filepath + "\n";
 
