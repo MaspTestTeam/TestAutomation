@@ -30,19 +30,22 @@ import java.util.Objects;
 // DEMO BEING TRUE WILL SLOW THE AUTOMATION DOWN TO SEE WHAT'S HAPPENING.
 // ******************************************************************
 public class BTACreationWithOutlook {
-
     public static void main(String[] args) throws IOException {
         BTACreationWithOutlook seleniumScript = new BTACreationWithOutlook();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = true; // Replace with your value
-        String VRNValue = "966601014"; // Replace with your value
-        String BPValue = "100381550";   //Replace with your BP value
+        String VRNValue = "813311134"; // Replace with your VRN value
+        String BPValue = "100347299";   //Replace with your BP value
+
+        // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(VRNValue, BPValue, demoSelected);
+        //Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
 
+    // The automation script that will execute the steps via selenium
     public String executeSeleniumScript(String VRNValue, String BPValue, boolean demo) throws IOException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
@@ -85,6 +88,17 @@ public class BTACreationWithOutlook {
         // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
 
+
+        //***************************************************************
+        //                  FILE READER AND WRITER INIT
+        //***************************************************************
+        //filepath to be edited
+        String filepath ="accounts/bta_created_accounts.txt";
+        File file = new File(filepath);
+        //class to write to the file loaded
+        FileWriter fileWriter = new FileWriter(file, true);
+        //class used to edit the file
+        BufferedWriter buffedWriter = new BufferedWriter(fileWriter);
 
         try {
             //***************************************************************
@@ -349,23 +363,14 @@ public class BTACreationWithOutlook {
             driver.findElement(By.xpath("/html/body/div/main/div/div/div/div/form/div[2]/button")).click();
 
             //If object isn't created end the script
-            if (!Objects.equals(driver.findElement(By.xpath("/html/body/pre")).getText(), "201 - Created")){
+            if (!Objects.equals(driver.findElement(By.xpath("/html/body/div/main/div/div/div/div/p")).getText(), "201 - Created")){
                 // End timer and return script failure error
                 long finishTime = System.currentTimeMillis();
                 double timeElapsedInSeconds = (finishTime - startTime)/1000d;
-                return "FAILED TO CREATE BTA DETAILS NOT SAVED. Time to Run Script:" + timeElapsedInSeconds + " seconds.";
+                return "FAILED TO CREATE BTA DETAILS NOT SAVED. Time to Run Script:" + timeElapsedInSeconds + " seconds." +"\n";
             }
 
-            //***************************************************************
-            //                  FILE READER AND WRITER INIT
-            //***************************************************************
-            //filepath to be edited
-            String filepath ="accounts/bta_created_accounts.txt";
-            File file = new File(filepath);
-            //class to write to the file loaded
-            FileWriter fileWriter = new FileWriter(file, true);
-            //class used to edit the file
-            BufferedWriter buffedWriter = new BufferedWriter(fileWriter);
+
             //***************************************************************
             //                     SAVE ACCOUNT DETAILS
             //***************************************************************
