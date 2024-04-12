@@ -1,4 +1,4 @@
-package IOSS;
+package OSS;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
@@ -16,7 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 // ********************************************************************
-// THIS SCRIPT WILL MAKE A RETURN TO ONE COUNTRY FROM NI
+// THIS SCRIPT WILL MAKE RETURN TO ONE COUNTRY FROM NI
+// AS WELL AS MAKE A DECLARATION OF TRADING BETWEEN TWO EU COUNTRIES
 // yOU MUST HAVE THE GOV GATEWAY ID TO MAKE THE RETURN
 // THE ACCOUNT MUST HAVE OUTSTANDING RETURNS TO WORK
 // THE ACCOUNT CAN HAVE ONE OR MULTIPLE OUTSTANDING RETURN
@@ -25,20 +26,25 @@ import java.util.List;
 // YOU CAN SCREENSHOT THE FINAL PAYMENT REFERENCE IF YOU WANT
 // BY SETTING THE takeScreenShot VARIABLE TO TRUE (FALSE BY DEFAULT)
 // ********************************************************************
-public class IOSSMakeReturnOneCountryScript {
+public class OSSMakeReturnOneCountryAndEUToEUScript {
     public static void main(String[] args) throws IOException, InterruptedException {
-        IOSSMakeReturnOneCountryScript seleniumScript = new IOSSMakeReturnOneCountryScript();
+        OSSMakeReturnOneCountryAndEUToEUScript seleniumScript = new OSSMakeReturnOneCountryAndEUToEUScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed return change this to true.
-        String GGIDValue = "85 48 22 53 42 71"; // Replace with the GGId of the account you're using
-        String countryTradedWith = "Austria";   // Country you are declaring trading with (make sure the first letter is capitalised)
-        String amountTraded = "160.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
+        String GGIDValue = "97 35 24 81 61 39"; // Replace with the GGId of the account you're using
+        String countryTradedWith = "Portugal";   // Country you are declaring trading with (make sure the first letter is capitalised)
+        String amountTraded = "1000.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
+        // The following are variables used to declare the trade between EU countries
+        String countrySellingFrom = "Finland";  // The EU country you are selling goods from
+        String countrySellingTo = "Croatia";  // The EU country you are selling goods to
+        String euTradeAmount = "500.00";  // Goods traded in pounds(£), remember the pence in the number (.00)
 
         // Run the selenium script
-        String result = seleniumScript.executeSeleniumScript(demoSelected, takeScreenShot, GGIDValue, countryTradedWith, amountTraded);
+        String result = seleniumScript.executeSeleniumScript(
+                demoSelected, takeScreenShot, GGIDValue, countryTradedWith, amountTraded, countrySellingFrom, countrySellingTo, euTradeAmount);
         // Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
@@ -46,7 +52,7 @@ public class IOSSMakeReturnOneCountryScript {
 
     // The automation script that will execute the steps via selenium
     public String executeSeleniumScript(
-            boolean demo, boolean takeScreenShot, String govGatewayID, String countryTradedWith, String amountTraded
+            boolean demo, boolean takeScreenShot, String govGatewayID, String countryTradedWith, String amountTraded, String countrySellingFrom, String countrySellingTo, String euTradeAmount
     ) throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
@@ -56,27 +62,15 @@ public class IOSSMakeReturnOneCountryScript {
 
 
         //***************************************************************
-        //              VARIABLES & .env LOADED & TIMER
+        //               VARIABLES & .env LOADED & TIMER
         //***************************************************************
         // Start Timer
         long startTime = System.currentTimeMillis();
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
-        String govGatewayBTAStartPoint = dotenv.get("RETURNS_URL"); // Start point to LOG INTO BTA
-        String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD"); //GG account password used to create and log in
-        String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");   //Code used for authentication app
-
-
-        //***************************************************************
-        //                  FILE READER AND WRITER INIT
-        //***************************************************************
-        //filepath to be edited
-        String filepath ="evidence/IOSS/Returns/ioss_return_references.txt";
-        File file = new File(filepath);
-        //class to write to the file loaded
-        FileWriter fileWriter = new FileWriter(file, true);
-        //class used to edit the file
-        BufferedWriter buffedWriter = new BufferedWriter(fileWriter);
+        String returnsURL = dotenv.get("RETURNS_URL");
+        String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD");
+        String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");
 
 
         //***************************************************************
@@ -94,46 +88,38 @@ public class IOSSMakeReturnOneCountryScript {
 
 
         //***************************************************************
+        //                  FILE READER AND WRITER INIT
+        //***************************************************************
+        //filepath to be edited
+        String filepath ="evidence/OSS/Returns/oss_return_references.txt";
+        File file = new File(filepath);
+        //class to write to the file loaded
+        FileWriter fileWriter = new FileWriter(file, true);
+        //class used to edit the file
+        BufferedWriter buffedWriter = new BufferedWriter(fileWriter);
+
+
+        //***************************************************************
         //******************* AUTOMATION START POINT ********************
         //***************************************************************
         //                      OPEN GOV GATEWAY
         //***************************************************************
-        // Open start point URL but log in this time.
-        driver.get(govGatewayBTAStartPoint);
+        // Open Start point URL
+        driver.get(returnsURL);
 
-        //clear cookie banner if demo so screen can be seen clearer
-        if (demo){
-            // Accept cookies
-            driver.findElement(By.xpath("/html/body/div[2]/div/div[2]/button[1]")).click();
-            //Clear Banner
-            driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/button")).click();
-            Thread.sleep(waitTime);
-        }
-
-        //***************************************************************
-        //                      SIGN IN
-        //***************************************************************
+        // Log in to gov gateway account
+        if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("user_id")).sendKeys(govGatewayID);
         driver.findElement(By.id("password")).sendKeys(govGatewayPassword);
         Thread.sleep(2000);
-        WebElement continueElement =driver.findElement(By.id("continue"));
-        if (continueElement.isDisplayed() && continueElement.isEnabled()) {
-            continueElement.click();
-        }
-        // Authentication code
+        driver.findElement(By.id("continue")).click();
+        //Authentication code
         driver.findElement(By.id("oneTimePassword")).sendKeys(authenticationCode);
-        Thread.sleep(2000);
-        WebElement authContinueElement =driver.findElement(By.id("continue"));
-        if (authContinueElement.isDisplayed() && authContinueElement.isEnabled()) {
-            authContinueElement.click();
-        }
-        // Skip activities
-        //driver.findElement(By.id("confirm-No")).click();
-        //driver.findElement(By.id("continue")).click();
         if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
 
-        // IOSS vat click start your return link
-        driver.findElement(By.id("ioss-start-return")).click();
+        // one-stop shop vat click start your return link
+        driver.findElement(By.id("oss-start-return")).click();
         if (demo) { Thread.sleep(waitTime); }
 
         // Do you want to start your return?
@@ -143,19 +129,37 @@ public class IOSSMakeReturnOneCountryScript {
         driver.findElement(By.id("continue")).click();
 
         //***************************************************************
-        //                      RETURN STARTS HERE
+        //                     SALES FROM NI
         //***************************************************************
         // Did you make eligible sales from Northern Ireland to the EU during this period?
-        // Click Yes
+        // Click yes
         driver.findElement(By.id("value")).click();
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("continue")).click();
 
-        // Function that will run all the steps needed to declare a trade with a country
+        // FIRST COUNTRY TRADE FROM NI
         declareTradeWithCountry(driver, demo, waitTime, countryTradedWith, amountTraded);
 
-        //Add sales to another country?
-        //Click no
+        // Add sales from Northern Ireland to another EU country?
+        // Click no
+        driver.findElement(By.id("value-no")).click();
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
+
+        //***************************************************************
+        //                SALES BETWEEN EU COUNTRIES
+        //***************************************************************
+        //Did you make eligible sales from an EU country to other EU countries during this period?
+        //Click yes
+        driver.findElement(By.id("value")).click();
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
+
+        // DECLARE A TRADE FROM ONE EU COUNTRY TO ANOTHER
+        declareEUtoEUTrade(driver, demo, waitTime, countrySellingFrom, countrySellingTo, euTradeAmount);
+
+        // Add sales from another EU country?
+        // Click no
         driver.findElement(By.id("value-no")).click();
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("continue")).click();
@@ -168,7 +172,6 @@ public class IOSSMakeReturnOneCountryScript {
             driver.findElement(By.id("value-no")).click();
             if (demo) { Thread.sleep(waitTime); }
             driver.findElement(By.id("continue")).click();
-
         }
 
         // Check your answers and click submit
@@ -184,7 +187,7 @@ public class IOSSMakeReturnOneCountryScript {
         DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String createdAt = dateTimeNow.format(dateTimeFormat);
         // Save the Return reference number
-        String returnReference = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/div[1]/div/strong")).getText();
+        String returnReference = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/div[1]/div/div/strong")).getText();
         // Create a formatted string to save
         String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + amountTraded + '\t' + '\t' + createdAt + '\t' + "false" + '\t' + "none";
         //write the string to the file
@@ -194,6 +197,7 @@ public class IOSSMakeReturnOneCountryScript {
         //close classes once file has been edited
         buffedWriter.close();
         fileWriter.close();
+
 
         //***************************************************************
         //             TAKE AND SAVE SCREENSHOT OF RETURN
@@ -212,16 +216,15 @@ public class IOSSMakeReturnOneCountryScript {
             //Remove / From the return reference so the file can be saved correctly
             String formattedReturnReference = returnReference.replace("/","");
             try {
-                FileHandler.copy(screenshotFile, new File("evidence/screenshots/IOSS/Returns/IOSSReturn_"+govGatewayID+"_"+formattedReturnReference+".png"));
-                result += "Screenshot Saved to: " + "evidence/screenshots/IOSS/Returns/IOSSReturn_"+govGatewayID+"_"+formattedReturnReference+".png"+'\n';
+                FileHandler.copy(screenshotFile, new File("evidence/screenshots/OSS/Returns/OSSReturn_"+govGatewayID+"_"+formattedReturnReference+".png"));
+                result += "Screenshot Saved to: " + "evidence/screenshots/OSS/Returns/OSSReturn_"+govGatewayID+"_"+formattedReturnReference+".png"+'\n';
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
-
-        // Return the input and results string
-        result += "GOV GATEWAY ID: " + govGatewayID + "\n";
+        // Include demoSelected and gatewayIDValue in the result
+        result += "GGID: " + govGatewayID + "\n";
         result += "Return made: "+ returnReference + " Saved to: " + filepath + '\n';
 
 
@@ -267,15 +270,72 @@ public class IOSSMakeReturnOneCountryScript {
         driver.findElement(By.id("continue")).click();
 
         // How much VAT did you charge on sales of £x at xx% VAT rate?
-        driver.findElement(By.id("choice")).click();
+        driver.findElement(By.id("value_0")).click();
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("continue")).click();
 
         // Check your answers
-        //Add another VAT rate?
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
+    }
+
+    private static void declareEUtoEUTrade(WebDriver driver, boolean demo, int waitTime, String countrySellingFrom, String countrySellingTo, String amountTraded) throws InterruptedException {
+        // Which EU country did you sell goods from?
+        WebElement countrySellFromInput = driver.findElement(By.id("value"));
+        // Check input is empty before typing in another value - this is filled if been completed before.
+        if ((countrySellFromInput.getAttribute("value").isEmpty()))
+        {
+            driver.findElement(By.id("value")).sendKeys(countrySellingFrom);
+            if (demo) { Thread.sleep(waitTime); }
+            // Double click needed
+            driver.findElement(By.id("continue")).click();
+            driver.findElement(By.id("continue")).click();
+        } else{
+            if (demo) { Thread.sleep(waitTime); }
+            driver.findElement(By.id("continue")).click();
+        }
+
+        // Where did you sell to from XXXXXX? Pick any country except NI
+        WebElement countrySoldTo2Input = driver.findElement(By.id("value"));
+        // Check input is empty before typing in another value - this is filled if been completed before.
+        if ((countrySoldTo2Input.getAttribute("value").isEmpty()))
+        {
+            driver.findElement(By.id("value")).sendKeys(countrySellingTo);
+            if (demo) { Thread.sleep(waitTime); }
+            // Double click needed
+            driver.findElement(By.id("continue")).click();
+            driver.findElement(By.id("continue")).click();
+        } else {
+            if (demo) { Thread.sleep(waitTime); }
+            driver.findElement(By.id("continue")).click();
+        }
+
+        // Which VAT rates did you charge?
+        // Click top value
+        driver.findElement(By.id("value_0")).click();
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
+
+        //What were your sales at XX% rate excluding VAT?
+        driver.findElement(By.id("value")).sendKeys(amountTraded);
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
+
+        // How much VAT did you charge on sales of £XXXXX at XX% VAT rate?
+        driver.findElement(By.id("value_0")).click();
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
+
+        // Check your answers
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
+
+        // Add sales from XXXXXX to another EU country?
+        if (demo) { Thread.sleep(waitTime); }
         //Click no
         driver.findElement(By.id("value-no")).click();
         if (demo) { Thread.sleep(waitTime); }
+        // Click continue
         driver.findElement(By.id("continue")).click();
     }
 }
