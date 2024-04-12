@@ -16,8 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 // ********************************************************************
-// THIS SCRIPT WILL MAKE RETURN TO ONE COUNTRY FROM NI
-// AS WELL AS MAKE A DECLARATION OF TRADING BETWEEN TWO EU COUNTRIES
+// THIS SCRIPT WILL MAKE A RETURN THAT HAS NO TRADES FROM NI
+// AND HAS A DECLARATION OF TRADING BETWEEN TWO EU COUNTRIES
 // yOU MUST HAVE THE GOV GATEWAY ID TO MAKE THE RETURN
 // THE ACCOUNT MUST HAVE OUTSTANDING RETURNS TO WORK
 // THE ACCOUNT CAN HAVE ONE OR MULTIPLE OUTSTANDING RETURN
@@ -26,17 +26,15 @@ import java.util.List;
 // YOU CAN SCREENSHOT THE FINAL PAYMENT REFERENCE IF YOU WANT
 // BY SETTING THE takeScreenShot VARIABLE TO TRUE (FALSE BY DEFAULT)
 // ********************************************************************
-public class OSSMakeReturnOneCountryAndEUToEUScript {
+public class OSSMakeReturnOnlyEUToEUScript {
     public static void main(String[] args) throws IOException, InterruptedException {
-        OSSMakeReturnOneCountryAndEUToEUScript seleniumScript = new OSSMakeReturnOneCountryAndEUToEUScript();
+        OSSMakeReturnOnlyEUToEUScript seleniumScript = new OSSMakeReturnOnlyEUToEUScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed return change this to true.
         String GGIDValue = "97 35 24 81 61 39"; // Replace with the GGId of the account you're using
-        String countryTradedWith = "Portugal";   // Country you are declaring trading with (make sure the first letter is capitalised)
-        String amountTraded = "1000.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
         // The following are variables used to declare the trade between EU countries
         String countrySellingFrom = "Finland";  // The EU country you are selling goods from
         String countrySellingTo = "Croatia";  // The EU country you are selling goods to
@@ -44,7 +42,7 @@ public class OSSMakeReturnOneCountryAndEUToEUScript {
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(
-                demoSelected, takeScreenShot, GGIDValue, countryTradedWith, amountTraded, countrySellingFrom, countrySellingTo, euTradeAmount);
+                demoSelected, takeScreenShot, GGIDValue, countrySellingFrom, countrySellingTo, euTradeAmount);
         // Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
@@ -52,7 +50,7 @@ public class OSSMakeReturnOneCountryAndEUToEUScript {
 
     // The automation script that will execute the steps via selenium
     public String executeSeleniumScript(
-            boolean demo, boolean takeScreenShot, String govGatewayID, String countryTradedWith, String amountTraded, String countrySellingFrom, String countrySellingTo, String euTradeAmount
+            boolean demo, boolean takeScreenShot, String govGatewayID, String countrySellingFrom, String countrySellingTo, String euTradeAmount
     ) throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
@@ -129,25 +127,16 @@ public class OSSMakeReturnOneCountryAndEUToEUScript {
         driver.findElement(By.id("continue")).click();
 
         //***************************************************************
-        //                     SALES FROM NI
+        //                     SALES FROM NI(non)
         //***************************************************************
         // Did you make eligible sales from Northern Ireland to the EU during this period?
-        // Click yes
-        driver.findElement(By.id("value")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // FIRST COUNTRY TRADE FROM NI
-        declareTradeWithCountry(driver, demo, waitTime, countryTradedWith, amountTraded);
-
-        // Add sales from Northern Ireland to another EU country?
         // Click no
         driver.findElement(By.id("value-no")).click();
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("continue")).click();
 
         //***************************************************************
-        //                SALES BETWEEN EU COUNTRIES
+        //                SALES BETWEEN EU COUNTRIES (one)
         //***************************************************************
         //Did you make eligible sales from an EU country to other EU countries during this period?
         //Click yes
@@ -188,10 +177,8 @@ public class OSSMakeReturnOneCountryAndEUToEUScript {
         String createdAt = dateTimeNow.format(dateTimeFormat);
         // Save the Return reference number
         String returnReference = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/div[1]/div/div/strong")).getText();
-        // Find the total amount of the return to two countries
-        double totalAmount = Double.parseDouble(amountTraded) + Double.parseDouble(euTradeAmount);
         // Create a formatted string to save
-        String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + totalAmount + '\t' + '\t' + createdAt + '\t' + "false" + '\t' + "none";
+        String accountDetailsCreated = govGatewayID + '\t' + returnReference + '\t' + euTradeAmount + '\t' + '\t' + createdAt + '\t' + "false" + '\t' + "none";
         //write the string to the file
         buffedWriter.write(accountDetailsCreated);
         //start a new line so the next variable appended is on a new line
@@ -242,46 +229,6 @@ public class OSSMakeReturnOneCountryAndEUToEUScript {
     }
 
 
-    //This function will execute the steps to declare a trade with a given country(country) for an amount(amountTraded).
-    // It needs variables from the main script like demo and waitTime as well as access to the driver to continue the script.
-    private static void declareTradeWithCountry(WebDriver driver, boolean demo, int waitTime, String country, String amountTraded) throws InterruptedException {
-        // Which country did you sell to from Northern Ireland?
-        // Check input is empty before typing in another value - this is filled if been completed before.
-        WebElement countrySoldToSecondInput = driver.findElement(By.id("value"));
-        if ((countrySoldToSecondInput.getAttribute("value").isEmpty()))
-        {
-            driver.findElement(By.id("value")).sendKeys(country);
-            if (demo) { Thread.sleep(waitTime); }
-            // Double click needed
-            driver.findElement(By.id("continue")).click();
-            driver.findElement(By.id("continue")).click();
-        }else {
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
-
-        // Which VAT rates did you charge?
-        // Click just top value
-        driver.findElement(By.id("value_0")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // What were your sales at xx% rate excluding VAT?
-        driver.findElement(By.id("value")).sendKeys(amountTraded);
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // How much VAT did you charge on sales of £x at xx% VAT rate?
-        driver.findElement(By.id("value_0")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // Check your answers
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-    }
-
-
     //This function will execute the steps to declare a trade with a two EU countries(countrySellingFrom and countrySellingTo) for a given amount(amountTraded)
     // It needs variables from the main script like demo and waitTime as well as access to the driver to continue the script.
     private static void declareEUtoEUTrade(WebDriver driver, boolean demo, int waitTime, String countrySellingFrom, String countrySellingTo, String amountTraded) throws InterruptedException {
@@ -322,7 +269,7 @@ public class OSSMakeReturnOneCountryAndEUToEUScript {
         driver.findElement(By.id("continue")).click();
 
         //What were your sales at XX% rate excluding VAT?
-        driver.findElement(By.id("value")).sendKeys(amountTraded);
+        driver.findElement(By.id("value_0")).sendKeys(amountTraded);
         if (demo) { Thread.sleep(waitTime); }
         driver.findElement(By.id("continue")).click();
 
