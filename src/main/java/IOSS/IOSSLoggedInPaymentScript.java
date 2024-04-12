@@ -35,7 +35,7 @@ public class IOSSLoggedInPaymentScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
-        boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
+        boolean takeScreenShot = true; // If you want a screenshot of the completed payment change this to true.
         String GGIDValue = "29 29 16 24 99 89"; // Replace with the GGId of the account you're using
         int percentPayment = 100; // Integer only, no decimals. 100 -> 100% = full payment
 
