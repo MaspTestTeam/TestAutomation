@@ -32,7 +32,7 @@ public class IOSSRegistrationWithFeScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
-        boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
+        boolean takeScreenShot = false; // If you want a screenshot of the completed reg change this to true.
         String GGIDValue = "48 19 56 90 51 44"; // Replace with the GGId of the account you're using
         String VRNValue = "889000038"; // Use the same VRN used in previous script
         String bpId = "100005038";  // bpID for the account created linked to vrn

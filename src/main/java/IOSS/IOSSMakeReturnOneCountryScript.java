@@ -32,7 +32,7 @@ public class IOSSMakeReturnOneCountryScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
-        boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
+        boolean takeScreenShot = false; // If you want a screenshot of the completed return change this to true.
         String GGIDValue = "85 48 22 53 42 71"; // Replace with the GGId of the account you're using
         String countryTradedWith = "Austria";   // Country you are declaring trading with (make sure the first letter is capitalised)
         String amountTraded = "160.00";   // Goods traded in pounds(£), remember the pence in the number (.00)

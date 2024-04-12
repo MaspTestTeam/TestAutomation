@@ -34,7 +34,7 @@ public class OSSRegistrationScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
-        boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
+        boolean takeScreenShot = false; // If you want a screenshot of the completed reg change this to true.
         String GGIDValue = "58 74 66 30 65 92"; // Replace with the GGId of the account you're using
         String VRNValue = "889900128"; // Use the same VRN used in previous script
         String bpId = "100347927";  // bpID for the account created linked to vrn

@@ -33,7 +33,7 @@ public class IOSSMakeNilReturnScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
-        boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
+        boolean takeScreenShot = false; // If you want a screenshot of the completed return change this to true.
         String GGIDValue = "85 48 22 53 42 71"; // Replace with the GGId of the account you're using
 
         // Run the selenium script
