@@ -33,9 +33,9 @@ public class BTACreationWithOutlook {
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
-        boolean demoSelected = true; // Replace with your value
-        String VRNValue = "900000115"; // Replace with your VRN value
-        String BPValue = "100357716";   //Replace with your BP value
+        boolean demoSelected = false; // Replace with your value
+        String VRNValue = "889000038"; // Replace with your VRN value
+        String BPValue = "100005038";   //Replace with your BP value
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(VRNValue, BPValue, demoSelected);
