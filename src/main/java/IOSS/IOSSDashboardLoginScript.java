@@ -10,22 +10,24 @@ import java.time.Duration;
 
 // ************************************************************
 // THIS SCRIPT WILL LOG INTO THE SIT ENVIRONMENT
-// cLICK THE VIEW IOSS ACCOUNT DASHBOARD
+// CLICK THE VIEW IOSS ACCOUNT DASHBOARD
 // ************************************************************
 public class IOSSDashboardLoginScript {
-
     public static void main(String[] args) throws IOException, InterruptedException {
         IOSSDashboardLoginScript seleniumScript = new IOSSDashboardLoginScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
-        boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "29 29 16 24 99 89"; // Replace with your value
+        boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
+        String GGIDValue = "29 29 16 24 99 89"; // Replace with the GGId of the account you're using
+
+        // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue);
+        // Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
 
-
+    // The automation script that will execute the steps via selenium
     public String executeSeleniumScript(boolean demo, String govGatewayID) throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE

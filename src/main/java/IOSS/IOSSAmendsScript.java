@@ -11,20 +11,22 @@ import java.util.ArrayList;
 
 
 public class IOSSAmendsScript {
-
     public static void main(String[] args) throws IOException, InterruptedException {
         IOSSAmendsScript seleniumScript = new IOSSAmendsScript();
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
-        boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "87 15 52 59 16 48"; // Replace with your value
+        boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
+        String GGIDValue = "29 29 16 24 99 89"; // Replace with the GGId of the account you're using
         String VRNValue = "999111031"; // Use the same VRN used in previous script
+
+        // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, VRNValue);
+        // Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
 
-
+    // The automation script that will execute the steps via selenium
     public String executeSeleniumScript(boolean demo, String govGatewayID ,String VRNValue) throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
