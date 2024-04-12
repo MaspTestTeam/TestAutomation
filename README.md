@@ -35,6 +35,13 @@ Guides for the above prerequisites can be emailed out or found in the sharepoint
 4. Open up the above file and see the gov gateway Id and any other information about the account you might need.
 ![Created BTA's](assets/created_BTAs.PNG)
 
+
+## Taking Screenshots
+Taking a screenshot is optional and turned off by default. Set the takeScreenShot variable to true on the script you want to take a screenshot of.
+To take a screenshot of your final payment/return/registration reference all you need to do it set the takeScreenShot variable to true.
+By default, these variables are false which will prevent unnecessary extra files being added.
+All screenshots are saved to the screenshot folders within evidence/screenshots.
+
 ### Registering for OSS/IOSS
 **NOTE:** The OSS and IOSS script structure and behaviour is the same to running one or the other requires the same steps. 
 For this example I will demonstrate the IOSS registration.
@@ -45,7 +52,8 @@ For this example I will demonstrate the IOSS registration.
 4. To find the information and details for the IOSS registration they are saved to accounts/ioss_created_Accounts.txt.
 ![Created IOSS](assets/created_IOSS_accounts.PNG)
 5. You can edit this file with any notes you want, it is not read by any script and only wrote to with new accounts appended to the bottom.
-6. Note: Screenshots will be saved to evidence/screenshots/IOSS/Registrations
+6. Note: Screenshots will be saved to evidence/screenshots/IOSS/Registrations and look like the example below
+![IOSS_Return_Screenshot_Example](assets/IOSS_reg_screenshot_example.PNG)
 
 The same steps for OSS are repeated as above but using the OSSRegistrationScript and details are saved to oss_Created_accounts.txt.
 
@@ -56,9 +64,11 @@ The same steps for OSS are repeated as above but using the OSSRegistrationScript
 3. Enter the country you are declaring a trade with and for how much.
 ![OSS_Return](assets/OSS_return_input.PNG)
 4. Sit back and wait for the script to run, It will collect the return reference at the end you don't need to note it down yourself.
-5. To find the information and details for the return go to evidence/OSS/Returns/return_references.txt
+5. To find the information and details for the return go to evidence/OSS/Returns/oss_return_references.txt
 ![OSS_Return_Output](assets/OSS_return_output.PNG)
 6. If you need to make a return to 2 countries then you can use the OSSMakeReturnTwoCountriesScript.java and follow the same steps as above.
+7. Note: Screenshots will be saved to evidence/screenshots/OSS/Returns and look like the example below.
+![OSS_Return_Screenshot_Example](assets/OSS_return_screenshot_example.PNG)
 
 ### Making a payment
 **NOTE:** The OSS and IOSS script structure is the same. For this example I will demonstrate the OSS behaviour.
@@ -72,12 +82,6 @@ The same steps for OSS are repeated as above but using the OSSRegistrationScript
 6. Note: Screenshots will be saved to evidence/screenshots/OSS/Payments and look like the example below.
 ![OSS_Payment_Screenshot_Example](assets/OSS_payment_screenshot_example.PNG)
 
-## Taking Screenshots
-Currently, you can take a screenshot in the payment and registrations scripts only.
-Returns are a work in progress but will follow the same principles and structure.
-To take a screenshot of your final payment/return/registration reference all you need to do it set the takeScreenShot variable to true.
-By default, these variables are false which will prevent unnecessary extra files being added.
-All screenshots are saved to the screenshot folders within evidence/screenshots.
 
 ## Editing the scripts
 Once the project is set up you can create accounts you are free to use the project how you want. You can create a new script or edit ones already there.
