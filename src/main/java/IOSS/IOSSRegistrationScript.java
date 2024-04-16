@@ -33,9 +33,9 @@ public class IOSSRegistrationScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed reg change this to true.
-        String GGIDValue = "13 43 13 24 14 51"; // Replace with the GGId of the account you're using
-        String VRNValue = "900000115"; // Use the same VRN used in previous script
-        String bpId = "100357716";  // bpID for the account created linked to vrn
+        String GGIDValue = "39 88 42 54 85 17"; // Replace with the GGId of the account you're using
+        String VRNValue = "888636063"; // Use the same VRN used in previous script
+        String bpId = "100380781";  // bpID for the account created linked to vrn
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, takeScreenShot, GGIDValue, VRNValue, bpId);
@@ -164,7 +164,7 @@ public class IOSSRegistrationScript {
             //driver.findElement(By.id("continue")).click();
             if (demo) { Thread.sleep(waitTime); }
 
-//***************************************************************
+            //***************************************************************
             //REPEAT INITIAL STEPS NOW LOGGED IN TO GET TO THE RIGHT START POINT
             //***************************************************************
             driver.get(govGatewayStartPointURL);
