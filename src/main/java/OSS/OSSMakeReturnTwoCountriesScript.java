@@ -1,5 +1,7 @@
 package OSS;
 
+import Components.ChromeDriverInit;
+import Components.SignIn;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -15,7 +17,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
+
 
 // ********************************************************************
 // THIS SCRIPT WILL MAKE RETURN
@@ -78,20 +80,6 @@ public class OSSMakeReturnTwoCountriesScript {
 
 
         //***************************************************************
-        //                  CHROME DRIVER INIT
-        //***************************************************************
-        System.setProperty("webdriver.chrome.driver", "resources/chromedriver.exe");
-        // Initialize the WebDriver (in this case, using Chrome)
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments( "incognito");
-        WebDriver driver = new ChromeDriver(options);
-        // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
-        // Full screen window
-        driver.manage().window().maximize();
-
-
-        //***************************************************************
         //                  FILE READER AND WRITER INIT
         //***************************************************************
         //filepath to be edited
@@ -104,23 +92,25 @@ public class OSSMakeReturnTwoCountriesScript {
 
 
         //***************************************************************
+        //                  CHROME DRIVER INIT
+        //***************************************************************
+        ChromeDriverInit chromeDriverInit = new ChromeDriverInit(); // Initialise chrome driver component
+        WebDriver driver = chromeDriverInit.driverInit();
+
+
+        //***************************************************************
         //******************* AUTOMATION START POINT ********************
         //***************************************************************
         //                      OPEN GOV GATEWAY
         //***************************************************************
-        // Open Start point URL
+        // Open start point URL but log in this time.
         driver.get(returnsURL);
 
-        // Log in to gov gateway account
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("user_id")).sendKeys(govGatewayID);
-        driver.findElement(By.id("password")).sendKeys(govGatewayPassword);
-        Thread.sleep(2000);
-        driver.findElement(By.id("continue")).click();
-        //Authentication code
-        driver.findElement(By.id("oneTimePassword")).sendKeys(authenticationCode);
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
+        //***************************************************************
+        //                      SIGN IN
+        //***************************************************************
+        SignIn signIn = new SignIn(); // Initialise the sign in component
+        signIn.signInAutomationSteps(driver, govGatewayID, govGatewayPassword, authenticationCode);
 
         // one-stop shop vat click start your return link
         driver.findElement(By.id("oss-start-return")).click();
