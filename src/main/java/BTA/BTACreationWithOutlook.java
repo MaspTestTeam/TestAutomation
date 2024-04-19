@@ -7,7 +7,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WindowType;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -85,7 +87,8 @@ public class BTACreationWithOutlook {
         WebDriver driver = new ChromeDriver(options);
         // Implicit wait so selenium retry for 8 seconds if elements do not load instantly.
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
-
+        // Wait time for driver that will check when a button is enabled
+        WebDriverWait driverWaitTime = new WebDriverWait(driver, Duration.ofSeconds(5));
 
         //***************************************************************
         //                  FILE READER AND WRITER INIT
@@ -141,19 +144,15 @@ public class BTACreationWithOutlook {
         // Click continue
         driver.findElement(By.id("continue")).click();
         if (demo) { Thread.sleep(waitTime); }
-        //--
         // Click to create new gateway account
         driver.findElement(By.id("no-account")).click();
         if (demo) { Thread.sleep(waitTime); }
-        Thread.sleep(2000);
         // Enter email address
         driver.findElement(By.id("emailAddress")).sendKeys(outlookEmail);
         if (demo) { Thread.sleep(waitTime); }
         // Click continue
-        WebElement element =driver.findElement(By.xpath("//*[@id=\"continue\"]"));
-        if (element.isDisplayed() && element.isEnabled()) {
-            element.click();
-        }
+        driverWaitTime.until(ExpectedConditions.elementToBeClickable(By.id("continue")));
+        driver.findElement(By.xpath("/html/body/div/main/div[1]/div/form/button")).click();
         if (demo) { Thread.sleep(waitTime); }
 
 
@@ -165,11 +164,11 @@ public class BTACreationWithOutlook {
         //OUTLOOK LOG IN
         driver.get(outlookEmailUrl);
         driver.findElement(By.xpath("//*[@id=\"i0116\"]")).sendKeys(outlookEmail);
+        driverWaitTime.until(ExpectedConditions.elementToBeClickable(By.id("idSIButton9")));
         driver.findElement(By.id("idSIButton9")).click();
-        Thread.sleep(1000);
         driver.findElement(By.xpath("//*[@id=\"i0118\"]")).sendKeys(outlookPassword);
+        driverWaitTime.until(ExpectedConditions.elementToBeClickable(By.id("idSIButton9")));
         driver.findElement(By.id("idSIButton9")).click();
-        Thread.sleep(500);
         //Stay signed in Click - NO
         //Check for one of the buttons, if it isn't there do the other one.
         int elem=driver.findElements(By.xpath("/html/body/div[1]/div/div[2]/div[1]/div/div/div/div/div[2]/div[2]/div/div/form/div[3]/div[2]/div/div[1]/button")).size();
@@ -182,12 +181,12 @@ public class BTACreationWithOutlook {
         }
 
         //Wait for email to arrive
-        Thread.sleep(10000);
+        Thread.sleep(1500);
         //Open email
         driver.findElement(By.xpath(
                 "/html/body/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div/div/div/div/div/div/div[2]/div/div/div/div/div[2]/div[2]/div[2]"
         )).click();
-        Thread.sleep(1500);
+        Thread.sleep(300);
         String verificationCode = driver.findElement(By.xpath(
                         "//*[@id=\"x_background\"]/table[4]/tbody/tr/td/p[3]/b"
                 )).getText();
@@ -271,14 +270,13 @@ public class BTACreationWithOutlook {
         driver.findElement(By.id("continue")).click();
 
 
-
         //***************************************************************
         //           OPEN EMAIL AND DELETE CONFIRMATION EMAIL
         //***************************************************************
         // Switch window back to Gov Gateway Verification
         driver.switchTo().window(outlookWindowHandle);
         //Wait for email to arrive
-        Thread.sleep(6000);
+        Thread.sleep(1500);
         //Open email
         driver.findElement(By.xpath(
                 "/html/body/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div/div/div/div/div/div/div[2]/div/div/div/div/div[2]/div[2]/div[2]"
