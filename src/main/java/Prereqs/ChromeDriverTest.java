@@ -65,7 +65,7 @@ public class ChromeDriverTest {
                 driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/button")).click();
                 Thread.sleep(waitTime);
             }
-
+            //driver.quit();
             // Return the input and results string
             return "TEST -> VRN " + VRNValue;
         } catch (Exception e) {

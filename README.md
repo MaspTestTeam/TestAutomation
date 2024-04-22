@@ -98,7 +98,9 @@ You can store and unused VRNS and BPS in accounts/unused_VRNS.txt if you collect
 
 If you get stuck you should know this stack is selenium, java with chrome driver if you are searching for information on Google.
 
-Common error: Your chrome and web-driver are out of sync due to updates. This requires you to install the updated chromedriver which can be found at [Here.](https://googlechromelabs.github.io/chrome-for-testing/)
+Common error: Your chrome and web-driver are out of sync due to updates. This requires you to install the updated chromedriver which can be found at [Here.](https://googlechromelabs.github.io/chrome-for-testing/) 
+If you are having issues deleting or moving the file into resources you need to kill all chromedriver instances.
+To do this go to your command prompt or terminal and run the following command "taskkill /f /im chromedriver.exe".
 
 If you get errors with the UI package, you can delete the entire package, it is there as an extra but not needed.
 
