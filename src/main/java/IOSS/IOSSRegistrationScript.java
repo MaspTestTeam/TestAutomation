@@ -2,6 +2,7 @@ package IOSS;
 
 import Components.ChromeDriverInit;
 import Components.SignIn;
+import Components.SuiteUtils;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 // ******************************************************************
 // SCRIPT WILL REGISTER TO IOSS SERVICE AND SAVE DETAILS OF REGISTRATION
@@ -35,9 +37,9 @@ public class IOSSRegistrationScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed reg change this to true.
-        String GGIDValue = "39 88 42 54 85 17"; // Replace with the GGId of the account you're using
-        String VRNValue = "888636063"; // Use the same VRN used in previous script
-        String bpId = "100380781";  // bpID for the account created linked to vrn
+        String GGIDValue = "52 08 20 29 15 81"; // Replace with the GGId of the account you're using
+        String VRNValue = "888650171"; // Use the same VRN used in previous script
+        String bpId = "100381967";  // bpID for the account created linked to vrn
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, takeScreenShot, GGIDValue, VRNValue, bpId);
@@ -61,6 +63,8 @@ public class IOSSRegistrationScript {
         //***************************************************************
         // Start Timer
         long startTime = System.currentTimeMillis();
+        // Init Utils
+        SuiteUtils utils = new SuiteUtils();
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayStartPointURL = dotenv.get("IOSS_REGISTRATION_LINK"); // Start point to create IOSS registration
@@ -163,7 +167,6 @@ public class IOSSRegistrationScript {
             if (demo) { Thread.sleep(waitTime); }
 
             // Click continue
-            Thread.sleep(500);
             driver.findElement(By.id("continue")).click();
             if (demo) { Thread.sleep(waitTime); }
 
@@ -191,10 +194,7 @@ public class IOSSRegistrationScript {
             if (demo) { Thread.sleep(waitTime); }
 
             //Enter a website you use to sell your goods
-            driver.findElement(By.id("value")).sendKeys("www.testsite.com");
-            Thread.sleep(500);
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+            utils.preventInputDuplicationWithContinue("value", "www.testsite.com", "continue", driver);
 
             //Add another website address?
             driver.findElement(By.id("value-no")).click();
@@ -203,31 +203,29 @@ public class IOSSRegistrationScript {
 
             //Business contact details
             //Enter Business contact details
-            Thread.sleep(2000);
             // Enter contact name
-            driver.findElement(By.id("fullName")).sendKeys("Release72");
+            utils.preventInputDuplication("fullName", "Release72", driver);
             if (demo) { Thread.sleep(waitTime); }
             // Enter telephone number
-            driver.findElement(By.id("telephoneNumber")).sendKeys("01111111111");
+            utils.preventInputDuplication("telephoneNumber", "01111111111", driver);
             if (demo) { Thread.sleep(waitTime); }
             // Enter Email address
-            driver.findElement(By.id("emailAddress")).sendKeys(outlookEmail);
+            utils.preventInputDuplication("emailAddress", outlookEmail, driver);
             if (demo) { Thread.sleep(waitTime); }
             driver.findElement(By.id("continue")).click();
 
             //Enter your bank or building society account details
             // Name on the account
-            Thread.sleep(2000);
-            driver.findElement(By.id("accountName")).sendKeys("MASP Testteam");
+            utils.preventInputDuplication("accountName", "MASP Testteam", driver);
             if (demo) { Thread.sleep(waitTime); }
             // Fill in the IBAN
-            driver.findElement(By.id("iban")).sendKeys(ibanCode);
+            utils.preventInputDuplication("iban", ibanCode, driver);
             if (demo) { Thread.sleep(waitTime); }
             //Click continue
             driver.findElement(By.xpath("/html/body/div/main/div/div/form/div[4]/button")).click();
 
             //Check Your Answers + Click register
-            driver.findElement(By.id("continue")).click();
+            //driver.findElement(By.id("continue")).click();
             if (demo) { Thread.sleep(waitTime); }
 
             //Save reference number after IOSS account is created

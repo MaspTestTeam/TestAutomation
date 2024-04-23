@@ -27,7 +27,7 @@ public class IOSSReturn {
             driver.findElement(By.id("continue")).click();
             driver.findElement(By.id("continue")).click();
         } else if ((!Objects.equals(countrySoldToSecondInput.getAttribute("value"), country))) {
-            for (int i =0; i<=country.length(); i++) {
+            for (int i =0; i<=30; i++) {
                 driver.findElement(By.id("value")).sendKeys(Keys.BACK_SPACE);
             }
             driver.findElement(By.id("value")).sendKeys(country);
