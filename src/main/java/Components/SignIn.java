@@ -21,6 +21,7 @@ public class SignIn {
         //***************************************************************
         //                      CLEAR COOKIE BANNER
         //***************************************************************
+        driverWaitTime.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/form/div/div/div[2]/button[1]")));
         driver.findElement(By.xpath("/html/body/form/div/div/div[2]/button[1]")).click();
         driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/a")).click();
 

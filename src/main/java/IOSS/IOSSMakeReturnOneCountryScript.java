@@ -1,21 +1,21 @@
 package IOSS;
 
 import Components.ChromeDriverInit;
+import Components.IOSSReturn;
 import Components.SignIn;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+
 import org.openqa.selenium.io.FileHandler;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 
 // ********************************************************************
 // THIS SCRIPT WILL MAKE A RETURN TO ONE COUNTRY FROM NI
@@ -36,7 +36,7 @@ public class IOSSMakeReturnOneCountryScript {
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed return change this to true.
         String GGIDValue = "85 48 22 53 42 71"; // Replace with the GGId of the account you're using
-        String countryTradedWith = "Austria";   // Country you are declaring trading with (make sure the first letter is capitalised)
+        String countryTradedWith = "Greece";   // Country you are declaring trading with (make sure the first letter is capitalised)
         String amountTraded = "160.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
 
         // Run the selenium script
@@ -122,7 +122,8 @@ public class IOSSMakeReturnOneCountryScript {
         driver.findElement(By.id("continue")).click();
 
         // Function that will run all the steps needed to declare a trade with a country
-        declareTradeWithCountry(driver, demo, waitTime, countryTradedWith, amountTraded);
+        IOSSReturn iossReturn = new IOSSReturn(); // Initiate the class with functions
+        iossReturn.declareTradeWithCountry(driver, demo, waitTime, countryTradedWith, amountTraded);
 
         //Add sales to another country?
         //Click no
@@ -171,7 +172,6 @@ public class IOSSMakeReturnOneCountryScript {
         String result = "Demo Selected: " + demo + "\n";
         //Check if user wants screenshot before taking the screenshot of the final payment
         if (takeScreenShot){
-            Thread.sleep(3000); //give time for page to load
             // Scroll down to view more information on the screen
             // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
             ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)");
@@ -204,48 +204,5 @@ public class IOSSMakeReturnOneCountryScript {
 
         // Return final result string
         return result;
-    }
-
-
-    //This function will execute the steps to declare a trade with a given country(country) for an amount(amountTraded).
-    // It needs variables from the main script like demo and waitTime as well as access to the driver to continue the script.
-    private static void declareTradeWithCountry(WebDriver driver, boolean demo, int waitTime, String country, String amountTraded) throws InterruptedException {
-        // Which country did you sell to from Northern Ireland?
-        // Check input is empty before typing in another value - this is filled if been completed before.
-        WebElement countrySoldToSecondInput = driver.findElement(By.id("value"));
-        if ((countrySoldToSecondInput.getAttribute("value").isEmpty()))
-        {
-            driver.findElement(By.id("value")).sendKeys(country);
-            if (demo) { Thread.sleep(waitTime); }
-            // Double click needed
-            driver.findElement(By.id("continue")).click();
-            driver.findElement(By.id("continue")).click();
-        }else {
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
-
-        // Which VAT rates did you charge?
-        // Click just top value
-        driver.findElement(By.id("value_0")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // What were your sales at xx% rate excluding VAT?
-        driver.findElement(By.id("value")).sendKeys(amountTraded);
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // How much VAT did you charge on sales of £x at xx% VAT rate?
-        driver.findElement(By.id("choice")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // Check your answers
-        //Add another VAT rate?
-        //Click no
-        driver.findElement(By.id("value-no")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
     }
 }
