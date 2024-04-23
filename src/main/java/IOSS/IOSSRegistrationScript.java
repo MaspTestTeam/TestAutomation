@@ -92,202 +92,199 @@ public class IOSSRegistrationScript {
         //class used to edit the file
         BufferedWriter buffedWriter = new BufferedWriter(fileWriter);
 
-        try{
-            //***************************************************************
-            //******************* AUTOMATION START POINT ********************
-            //***************************************************************
-            //                      OPEN GOV GATEWAY
-            //***************************************************************
-            // Re-open start point URL but log in this time.
-            driver.get(govGatewayStartPointURL);
 
-            //Is your business already registered for the Import One-Stop Shop scheme in an EU country?
-            driver.findElement(By.id("value-no")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //***************************************************************
+        //******************* AUTOMATION START POINT ********************
+        //***************************************************************
+        //                      OPEN GOV GATEWAY
+        //***************************************************************
+        // Re-open start point URL but log in this time.
+        driver.get(govGatewayStartPointURL);
 
-            //Does your business sell goods from countries outside the EU to consumers in the EU or Northern Ireland?
-            driver.findElement(By.id("value")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Is your business already registered for the Import One-Stop Shop scheme in an EU country?
+        driver.findElement(By.id("value-no")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //Do any of these goods have a consignment value of £135 or less?
-            driver.findElement(By.id("value")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Does your business sell goods from countries outside the EU to consumers in the EU or Northern Ireland?
+        driver.findElement(By.id("value")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //Is your business registered for VAT in the UK?
-            driver.findElement(By.id("value")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Do any of these goods have a consignment value of £135 or less?
+        driver.findElement(By.id("value")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //Are you a Northern Ireland business?
-            driver.findElement(By.id("value")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Is your business registered for VAT in the UK?
+        driver.findElement(By.id("value")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            // Click continue
-            Thread.sleep(500);
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Are you a Northern Ireland business?
+        driver.findElement(By.id("value")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //***************************************************************
-            //                      SIGN IN
-            //***************************************************************
-            SignIn signIn = new SignIn(); // Initialise the sign in component
-            signIn.signInAutomationSteps(driver, govGatewayID, govGatewayPassword, authenticationCode);
+        // Click continue
+        Thread.sleep(500);
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //***************************************************************
-            //REPEAT INITIAL STEPS NOW LOGGED IN TO GET TO THE RIGHT START POINT
-            //***************************************************************
-            driver.get(govGatewayStartPointURL);
-            //Is your business already registered for the Import One-Stop Shop scheme in an EU country?
-            driver.findElement(By.id("value-no")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //***************************************************************
+        //                      SIGN IN
+        //***************************************************************
+        SignIn signIn = new SignIn(); // Initialise the sign in component
+        signIn.signInAutomationSteps(driver, govGatewayID, govGatewayPassword, authenticationCode);
 
-            //Does your business sell goods from countries outside the EU to consumers in the EU or Northern Ireland?
-            driver.findElement(By.id("value")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //***************************************************************
+        //REPEAT INITIAL STEPS NOW LOGGED IN TO GET TO THE RIGHT START POINT
+        //***************************************************************
+        driver.get(govGatewayStartPointURL);
+        //Is your business already registered for the Import One-Stop Shop scheme in an EU country?
+        driver.findElement(By.id("value-no")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //Do any of these goods have a consignment value of £135 or less?
-            driver.findElement(By.id("value")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Does your business sell goods from countries outside the EU to consumers in the EU or Northern Ireland?
+        driver.findElement(By.id("value")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //Is your business registered for VAT in the UK?
-            driver.findElement(By.id("value")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Do any of these goods have a consignment value of £135 or less?
+        driver.findElement(By.id("value")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //Are you a Northern Ireland business?
-            driver.findElement(By.id("value")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Is your business registered for VAT in the UK?
+        driver.findElement(By.id("value")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            // Click continue
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Are you a Northern Ireland business?
+        driver.findElement(By.id("value")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //***************************************************************
-            //                  ENTER DETAILS
-            //***************************************************************
-            //Do you want to register this business for the Import One-Stop Shop Union scheme?
-            driver.findElement(By.id("value_0")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        // Click continue
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //Does your business trade using a name that is different?
-            driver.findElement(By.id("value-no")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //***************************************************************
+        //                  ENTER DETAILS
+        //***************************************************************
+        //Do you want to register this business for the Import One-Stop Shop Union scheme?
+        driver.findElement(By.id("value_0")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //Has your business ever registered for an Import One-Stop Shop scheme in an EU country?
-            driver.findElement(By.id("value-no")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Does your business trade using a name that is different?
+        driver.findElement(By.id("value-no")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //Is your business registered for VAT in EU countries?
-            driver.findElement(By.id("value-no")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Has your business ever registered for an Import One-Stop Shop scheme in an EU country?
+        driver.findElement(By.id("value-no")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //Enter a website you use to sell your goods
-            utils.preventInputDuplicationWithContinue("value", "www.testsite.com", "continue", driver);
+        //Is your business registered for VAT in EU countries?
+        driver.findElement(By.id("value-no")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //Add another website address?
-            driver.findElement(By.id("value-no")).click();
-            driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Enter a website you use to sell your goods
+        utils.preventInputDuplicationWithContinue("value", "www.testsite.com", "continue", driver);
 
-            //Business contact details
-            //Enter Business contact details
-            // Enter contact name
-            utils.preventInputDuplication("fullName", "Release72", driver);
-            if (demo) { Thread.sleep(waitTime); }
-            // Enter telephone number
-            utils.preventInputDuplication("telephoneNumber", "01111111111", driver);
-            if (demo) { Thread.sleep(waitTime); }
-            // Enter Email address
-            utils.preventInputDuplication("emailAddress", outlookEmail, driver);
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
+        //Add another website address?
+        driver.findElement(By.id("value-no")).click();
+        driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-            //Enter your bank or building society account details
-            // Name on the account
-            utils.preventInputDuplication("accountName", "MASP Testteam", driver);
-            if (demo) { Thread.sleep(waitTime); }
-            // Fill in the IBAN
-            utils.preventInputDuplication("iban", ibanCode, driver);
-            if (demo) { Thread.sleep(waitTime); }
-            //Click continue
-            driver.findElement(By.xpath("/html/body/div/main/div/div/form/div[4]/button")).click();
+        //Business contact details
+        //Enter Business contact details
+        // Enter contact name
+        utils.preventInputDuplication("fullName", "Release72", driver);
+        if (demo) { Thread.sleep(waitTime); }
+        // Enter telephone number
+        utils.preventInputDuplication("telephoneNumber", "01111111111", driver);
+        if (demo) { Thread.sleep(waitTime); }
+        // Enter Email address
+        utils.preventInputDuplication("emailAddress", outlookEmail, driver);
+        if (demo) { Thread.sleep(waitTime); }
+        driver.findElement(By.id("continue")).click();
 
-            //Check Your Answers + Click register
-            //driver.findElement(By.id("continue")).click();
-            if (demo) { Thread.sleep(waitTime); }
+        //Enter your bank or building society account details
+        // Name on the account
+        utils.preventInputDuplication("accountName", "MASP Testteam", driver);
+        if (demo) { Thread.sleep(waitTime); }
+        // Fill in the IBAN
+        utils.preventInputDuplication("iban", ibanCode, driver);
+        if (demo) { Thread.sleep(waitTime); }
+        //Click continue
+        driver.findElement(By.xpath("/html/body/div/main/div/div/form/div[4]/button")).click();
 
-            //Save reference number after IOSS account is created
-            Thread.sleep(10000);
-            String refNumber = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/div[1]/p/span")).getText().strip();
+        //Check Your Answers + Click register
+        //driver.findElement(By.id("continue")).click();
+        if (demo) { Thread.sleep(waitTime); }
 
-
-            //***************************************************************
-            //                     SAVE ACCOUNT DETAILS
-            //***************************************************************
-            // Create a formatted timestamp
-            LocalDateTime dateTimeNow = LocalDateTime.now(); // Create a date object
-            DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String createdAt = dateTimeNow.format(dateTimeFormat);
-            // Create a formatted string to save
-            String accountDetailsCreated = govGatewayID + '\t' + createdAt + '\t' + refNumber + '\t' + VRNvalue + '\t' + BPID +"\t" + "false" + '\t'+'\t' + "false" + '\t' +'\t'+'\t'+"none";
-            //write the string to the file
-            buffedWriter.write(accountDetailsCreated);
-            //start a new line so the next variable appended is on a new line
-            buffedWriter.newLine();
-            //close classes once file has been edited
-            buffedWriter.close();
-            fileWriter.close();
+        //Save reference number after IOSS account is created
+        Thread.sleep(10000);
+        String refNumber = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/div[1]/p/span")).getText().strip();
 
 
-            //***************************************************************
-            //             TAKE AND SAVE SCREENSHOT OF REG
-            //***************************************************************
-            String result = "Demo Selected: " + demo + "\n";
-            //Check if user wants screenshot before taking the screenshot of the final payment
-            if (takeScreenShot){
-                // Scroll down to view more information on the screen
-                // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
-                ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)");
-                // Take screenshot
-                TakesScreenshot screenshotDriver = (TakesScreenshot) driver;
-                File screenshotFile = screenshotDriver.getScreenshotAs(OutputType.FILE);
-                // Save screenshot
-                try {
-                    FileHandler.copy(screenshotFile, new File("evidence/screenshots/IOSS/Registrations/IOSSReg_"+refNumber+".png"));
-                    result += "Screenshot Saved to: " + "evidence/screenshots/IOSS/Registrations/IOSSReg_"+refNumber+".png"+'\n';
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+        //***************************************************************
+        //                     SAVE ACCOUNT DETAILS
+        //***************************************************************
+        // Create a formatted timestamp
+        LocalDateTime dateTimeNow = LocalDateTime.now(); // Create a date object
+        DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String createdAt = dateTimeNow.format(dateTimeFormat);
+        // Create a formatted string to save
+        String accountDetailsCreated = govGatewayID + '\t' + createdAt + '\t' + refNumber + '\t' + VRNvalue + '\t' + BPID +"\t" + "false" + '\t'+'\t' + "false" + '\t' +'\t'+'\t'+"none";
+        //write the string to the file
+        buffedWriter.write(accountDetailsCreated);
+        //start a new line so the next variable appended is on a new line
+        buffedWriter.newLine();
+        //close classes once file has been edited
+        buffedWriter.close();
+        fileWriter.close();
+
+
+        //***************************************************************
+        //             TAKE AND SAVE SCREENSHOT OF REG
+        //***************************************************************
+        String result = "Demo Selected: " + demo + "\n";
+        //Check if user wants screenshot before taking the screenshot of the final payment
+        if (takeScreenShot){
+            // Scroll down to view more information on the screen
+            // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
+            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)");
+            // Take screenshot
+            TakesScreenshot screenshotDriver = (TakesScreenshot) driver;
+            File screenshotFile = screenshotDriver.getScreenshotAs(OutputType.FILE);
+            // Save screenshot
+            try {
+                FileHandler.copy(screenshotFile, new File("evidence/screenshots/IOSS/Registrations/IOSSReg_"+refNumber+".png"));
+                result += "Screenshot Saved to: " + "evidence/screenshots/IOSS/Registrations/IOSSReg_"+refNumber+".png"+'\n';
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-
-            // Include demoSelected and gatewayIDValue in the result
-            result += "IOSS Account created with Gov GatewayID: " + govGatewayID + "\n";
-            result += "Details saved to: " + filepath + "\n";
-
-
-            //***************************************************************
-            //                          END TIMER
-            //***************************************************************
-            long finishTime = System.currentTimeMillis();
-            double timeElapsedInSeconds = (finishTime - startTime)/1000d;
-            result += "Time to Run Script: " + timeElapsedInSeconds + " seconds.";
-
-            // Return final result string
-            return result;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
+
+        // Include demoSelected and gatewayIDValue in the result
+        result += "IOSS Account created with Gov GatewayID: " + govGatewayID + "\n";
+        result += "Details saved to: " + filepath + "\n";
+
+
+        //***************************************************************
+        //                          END TIMER
+        //***************************************************************
+        long finishTime = System.currentTimeMillis();
+        double timeElapsedInSeconds = (finishTime - startTime)/1000d;
+        result += "Time to Run Script: " + timeElapsedInSeconds + " seconds.";
+
+        // Return final result string
+        return result;
     }
 }
