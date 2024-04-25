@@ -2,17 +2,15 @@ package OSS;
 
 import Components.ChromeDriverInit;
 import Components.SignIn;
+import Components.SuiteUtils;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.io.FileHandler;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -37,9 +35,9 @@ public class OSSRegistrationScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed reg change this to true.
-        String GGIDValue = "58 74 66 30 65 92"; // Replace with the GGId of the account you're using
-        String VRNValue = "889900128"; // Use the same VRN used in previous script
-        String bpId = "100347927";  // bpID for the account created linked to vrn
+        String GGIDValue = "52 08 20 29 15 81"; // Replace with the GGId of the account you're using
+        String VRNValue = "888650171"; // Use the same VRN used in previous script
+        String bpId = "100381967";  // bpID for the account created linked to vrn
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, takeScreenShot, GGIDValue, VRNValue, bpId);
@@ -62,6 +60,8 @@ public class OSSRegistrationScript {
         //***************************************************************
         // Start Timer
         long startTime = System.currentTimeMillis();
+        // Init the utils to improve duplication and inputs
+        SuiteUtils utils = new SuiteUtils();
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayStartPointURL = dotenv.get("GOV_GATEWAY_START_POINT_URL");
@@ -150,7 +150,7 @@ public class OSSRegistrationScript {
         // Date of your first eligible sale
         // This returns a string of the format "For example, 1 3 2024"
         String exampleDateText = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/form/div[1]/fieldset/div[1]")).getText();
-        //Parse the string to get three values 1, 3, 2024 as an array [1, 3, 2024]
+        //Parse the string to get three values 1, 3, 2024 as an array [1, 3, 2024]:[day, month, year]
         String[] dates = exampleDateText.split(",",2)[1].trim().split(" ", 3);
         // Input the three example values
         driver.findElement(By.id("value.day")).sendKeys(dates[0]);
@@ -190,10 +190,7 @@ public class OSSRegistrationScript {
         driver.findElement(By.id("continue")).click();
 
         // Enter website used to sell goods
-        driver.findElement(By.id("value")).sendKeys("www.testsite.com");
-        if (demo) { Thread.sleep(waitTime); }
-        // Click continue
-        driver.findElement(By.id("continue")).click();
+        utils.preventInputDuplicationWithContinue("value", "www.testsite.com", "continue", driver);
 
         // Add another website address?
         // Click no
@@ -202,30 +199,25 @@ public class OSSRegistrationScript {
         // Click continue
         driver.findElement(By.id("continue")).click();
 
-        //Enter Business contact details
-        Thread.sleep(2000);
+        //Business contact details
         // Enter contact name
-        driver.findElement(By.id("fullName")).sendKeys("MASP Testteam");
+        utils.preventInputDuplication("fullName", "Release72", driver);
         if (demo) { Thread.sleep(waitTime); }
         // Enter telephone number
-        driver.findElement(By.id("telephoneNumber")).sendKeys("01111111111");
+        utils.preventInputDuplication("telephoneNumber", "01111111111", driver);
         if (demo) { Thread.sleep(waitTime); }
         // Enter Email address
-        //driver.findElement(By.id("emailAddress")).sendKeys(hmrcEMAIL); // Can only be HMRC account
-        driver.findElement(By.id("emailAddress")).sendKeys(outlookEmail);
+        utils.preventInputDuplication("emailAddress", outlookEmail, driver);
         if (demo) { Thread.sleep(waitTime); }
-
-        // Click continue
         driver.findElement(By.id("continue")).click();
-        Thread.sleep(4000); //Wait for code forwarding
 
+        //Enter your bank or building society account details
         // Name on the account
-        Thread.sleep(2000);
-        driver.findElement(By.id("accountName")).sendKeys("MASP Testteam");
-
+        utils.preventInputDuplication("accountName", "MASP Testteam", driver);
+        if (demo) { Thread.sleep(waitTime); }
         // Fill in the IBAN
-        driver.findElement(By.id("iban")).sendKeys(ibanCode);
-
+        utils.preventInputDuplication("iban", ibanCode, driver);
+        if (demo) { Thread.sleep(waitTime); }
         //Click continue
         driver.findElement(By.xpath("/html/body/div/main/div/div/form/div[4]/button")).click();
 
@@ -241,7 +233,7 @@ public class OSSRegistrationScript {
         DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String createdAt = dateTimeNow.format(dateTimeFormat);
         // Create a formatted string to save
-        String accountDetailsCreated = govGatewayID + '\t' + createdAt + '\t' + VRNValue + '\t' + BPid +"\t" + "false" + '\t'+'\t'+'\t' +"false" +'\t'+'\t' + "none";
+        String accountDetailsCreated = govGatewayID + '\t' + createdAt + '\t' + VRNValue + '\t' + BPid +"\t" + "false" + '\t'+'\t' +"false" +'\t'+'\t'+'\t' + "none";
         //write the string to the file
         buffedWriter.write(accountDetailsCreated);
         //start a new line so the next variable appended is on a new line

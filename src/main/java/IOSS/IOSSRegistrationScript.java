@@ -5,18 +5,14 @@ import Components.SignIn;
 import Components.SuiteUtils;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.io.FileHandler;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 
 // ******************************************************************
 // SCRIPT WILL REGISTER TO IOSS SERVICE AND SAVE DETAILS OF REGISTRATION
@@ -202,7 +198,6 @@ public class IOSSRegistrationScript {
         if (demo) { Thread.sleep(waitTime); }
 
         //Business contact details
-        //Enter Business contact details
         // Enter contact name
         utils.preventInputDuplication("fullName", "Release72", driver);
         if (demo) { Thread.sleep(waitTime); }
@@ -225,7 +220,7 @@ public class IOSSRegistrationScript {
         driver.findElement(By.xpath("/html/body/div/main/div/div/form/div[4]/button")).click();
 
         //Check Your Answers + Click register
-        //driver.findElement(By.id("continue")).click();
+        driver.findElement(By.id("continue")).click();
         if (demo) { Thread.sleep(waitTime); }
 
         //Save reference number after IOSS account is created

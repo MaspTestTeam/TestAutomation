@@ -19,6 +19,8 @@ public class SuiteUtils {
     // The function will check if the value is already there, if its different or empty and
     // Fill it out accordingly.
     // This will also assume there is only one input on the page
+    //NOTE: This wil require an addition click of the continue button if the input has auto complete
+    // to do this add it directly to the test script not this functions
     public void preventInputDuplicationWithContinue(String elementID, String inputValue, String continueButtonID, WebDriver driver){
         WebElement inputValueElement = driver.findElement(By.id(elementID));
         if ((inputValueElement.getAttribute("value").isEmpty())){

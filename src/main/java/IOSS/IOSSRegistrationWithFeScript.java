@@ -199,6 +199,7 @@ public class IOSSRegistrationWithFeScript {
         //***************************************************************
         // Enter an EU country where your business is registered for tax
         utils.preventInputDuplicationWithContinue("value", FeCountry, "continue", driver);
+        driver.findElement(By.id("continue")).click();
 
         //Does your business have a fixed establishment in XXXXXX
         //Click yes
@@ -256,7 +257,6 @@ public class IOSSRegistrationWithFeScript {
         driver.findElement(By.id("continue")).click();
         if (demo) { Thread.sleep(waitTime); }
 
-        //Business contact details
         //Enter Business contact details
         // Enter contact name
         utils.preventInputDuplication("fullName", "Release72", driver);
@@ -280,7 +280,7 @@ public class IOSSRegistrationWithFeScript {
         driver.findElement(By.xpath("/html/body/div/main/div/div/form/div[4]/button")).click();
 
         //Check Your Answers + Click register
-        //driver.findElement(By.id("continue")).click();
+        driver.findElement(By.id("continue")).click();
         if (demo) { Thread.sleep(waitTime); }
 
         //Save reference number after IOSS account is created

@@ -2,17 +2,15 @@ package OSS;
 
 import Components.ChromeDriverInit;
 import Components.SignIn;
+import Components.SuiteUtils;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.io.FileHandler;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -37,9 +35,9 @@ public class OSSRegistrationWithFeScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed reg change this to true.
-        String GGIDValue = "97 35 24 81 61 39"; // Replace with the GGId of the account you're using
-        String VRNValue = "888649736"; // Use the same VRN used in previous script
-        String bpId = "100381963";  // bpID for the account created linked to vrn
+        String GGIDValue = "52 08 20 29 15 81"; // Replace with the GGId of the account you're using
+        String VRNValue = "888650171"; // Use the same VRN used in previous script
+        String bpId = "100381967";  // bpID for the account created linked to vrn
         String FeCountry = "Austria"; // The country your using as fixed establishment
         String FeVATNumber = "ATU12345678"; // The VAT number used to register in the FE country
 
@@ -65,6 +63,8 @@ public class OSSRegistrationWithFeScript {
         //***************************************************************
         // Start Timer
         long startTime = System.currentTimeMillis();
+        // Init the utils to improve duplication and inputs
+        SuiteUtils utils = new SuiteUtils();
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayStartPointURL = dotenv.get("GOV_GATEWAY_START_POINT_URL");
@@ -183,12 +183,7 @@ public class OSSRegistrationWithFeScript {
         //                  FIXED ESTABLISHMENT DETAILS
         //***************************************************************
         // Enter an EU country where your business is registered for tax
-        if (demo) { Thread.sleep(waitTime); }
-        // Enter the name of the country into the input box
-        driver.findElement(By.id("value")).sendKeys(FeCountry);
-        Thread.sleep(700);
-        // Click continue twice
-        driver.findElement(By.id("continue")).click();
+        utils.preventInputDuplicationWithContinue("value", FeCountry, "continue", driver);
         driver.findElement(By.id("continue")).click();
 
         //Does your business sell goods from XXXXXX to consumers in the EU?
@@ -214,24 +209,18 @@ public class OSSRegistrationWithFeScript {
 
         // What is your VAT registration number for XXXXXX?
         // Enter the VAT number in the input box
-        driver.findElement(By.id("value")).sendKeys(FeVATNumber);
-        Thread.sleep(400);
-        // Click continue
-        driver.findElement(By.id("continue")).click();
+        utils.preventInputDuplicationWithContinue("value", FeVATNumber, "continue", driver);
 
         // What is your trading name in XXXXXX?
         // Enter the Trading name
-        driver.findElement(By.id("value")).sendKeys("Fixed Establishment VATECOM");
-        Thread.sleep(400);
-        // Click continue
-        driver.findElement(By.id("continue")).click();
+        utils.preventInputDuplicationWithContinue("value", "Fixed Establishment", "continue", driver);
 
-        // What is the fixed establishment address in Austria?
+        // What is the fixed establishment address in XXXXXX?
         // Address line 1
-        driver.findElement(By.id("line1")).sendKeys("16 Grove Lane");
+        utils.preventInputDuplication("line1", "16 Grove Lane", driver);
         //Town or City
         if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("townOrCity")).sendKeys("TEST");
+        utils.preventInputDuplication("townOrCity", "TEST", driver);
         if (demo) { Thread.sleep(waitTime); }
         // Click continue
         driver.findElement(By.id("continue")).click();
@@ -266,10 +255,7 @@ public class OSSRegistrationWithFeScript {
         driver.findElement(By.id("continue")).click();
 
         // Enter website used to sell goods
-        driver.findElement(By.id("value")).sendKeys("www.testsite.com");
-        if (demo) { Thread.sleep(waitTime); }
-        // Click continue
-        driver.findElement(By.id("continue")).click();
+        utils.preventInputDuplicationWithContinue("value", "www.testsite2.com", "continue", driver);
 
         // Add another website address?
         // Click no
@@ -279,28 +265,24 @@ public class OSSRegistrationWithFeScript {
         driver.findElement(By.id("continue")).click();
 
         //Enter Business contact details
-        Thread.sleep(2000);
         // Enter contact name
-        driver.findElement(By.id("fullName")).sendKeys("MASP Testteam");
+        utils.preventInputDuplication("fullName", "Release72", driver);
         if (demo) { Thread.sleep(waitTime); }
         // Enter telephone number
-        driver.findElement(By.id("telephoneNumber")).sendKeys("01111111111");
+        utils.preventInputDuplication("telephoneNumber", "01111111111", driver);
         if (demo) { Thread.sleep(waitTime); }
         // Enter Email address
-        //driver.findElement(By.id("emailAddress")).sendKeys(hmrcEMAIL); // Can only be HMRC account
-        driver.findElement(By.id("emailAddress")).sendKeys(outlookEmail);
+        utils.preventInputDuplication("emailAddress", outlookEmail, driver);
         if (demo) { Thread.sleep(waitTime); }
-
-        // Click continue
         driver.findElement(By.id("continue")).click();
-        Thread.sleep(2000); //Wait for code forwarding
 
+        //Enter your bank or building society account details
         // Name on the account
-        Thread.sleep(2000);
-        driver.findElement(By.id("accountName")).sendKeys("MASP Testteam");
-
+        utils.preventInputDuplication("accountName", "MASP Testteam", driver);
+        if (demo) { Thread.sleep(waitTime); }
         // Fill in the IBAN
-        driver.findElement(By.id("iban")).sendKeys(ibanCode);
+        utils.preventInputDuplication("iban", ibanCode, driver);
+        if (demo) { Thread.sleep(waitTime); }
 
         //Click continue
         driver.findElement(By.xpath("/html/body/div/main/div/div/form/div[4]/button")).click();
