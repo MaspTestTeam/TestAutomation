@@ -9,13 +9,13 @@ import java.util.Objects;
 
 // ************************************************
 // THIS FUNCTION WILL HOLD FUNCTIONS AND METHODS
-// THAT ARE RPEATEAD WHEN MAKING AN IOSS RETURN
+// THAT ARE REPEATED WHEN MAKING AN IOSS RETURN
 // ************************************************
 public class IOSSReturn {
 
     //This function will execute the steps to declare a trade with a given country(country) for an amount(amountTraded).
     // It needs variables from the main script like demo and waitTime as well as access to the driver to continue the script.
-    public void declareTradeWithCountry(WebDriver driver, boolean demo, int waitTime, String country, String amountTraded) throws InterruptedException {
+    public void iossDeclareTradeWithCountry(WebDriver driver, boolean demo, int waitTime, String country, String amountTraded) throws InterruptedException {
         // Which country did you sell to from Northern Ireland?
         // Check input is empty before typing in another value - this is filled if been completed before.
         WebElement countrySoldToSecondInput = driver.findElement(By.id("value"));

@@ -130,7 +130,7 @@ public class IOSSMakeReturnTwoCountriesScript {
 
         // Function that will run all the steps needed to declare a trade with a country
         IOSSReturn iossReturn = new IOSSReturn(); // Initiate the class with functions
-        iossReturn.declareTradeWithCountry(driver, demo, waitTime, firstCountryTradedWith, firstAmountTraded);
+        iossReturn.iossDeclareTradeWithCountry(driver, demo, waitTime, firstCountryTradedWith, firstAmountTraded);
 
         //***************************************************************
         //                      SECOND COUNTRY
@@ -142,7 +142,7 @@ public class IOSSMakeReturnTwoCountriesScript {
         driver.findElement(By.id("continue")).click();
 
         // Function that will run all the steps needed to declare a trade with a country
-        iossReturn.declareTradeWithCountry(driver, demo, waitTime, secondCountryTradedWith, secondAmountTraded);
+        iossReturn.iossDeclareTradeWithCountry(driver, demo, waitTime, secondCountryTradedWith, secondAmountTraded);
 
         // Do you want to correct a previous return?
         // This only pops up if a return has been previously made.

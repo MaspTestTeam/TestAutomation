@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 
 // ********************************************************************
 // THIS SCRIPT WILL MAKE A RETURN TO ONE COUNTRY FROM NI
@@ -123,7 +122,7 @@ public class IOSSMakeReturnOneCountryScript {
 
         // Function that will run all the steps needed to declare a trade with a country
         IOSSReturn iossReturn = new IOSSReturn(); // Initiate the class with functions
-        iossReturn.declareTradeWithCountry(driver, demo, waitTime, countryTradedWith, amountTraded);
+        iossReturn.iossDeclareTradeWithCountry(driver, demo, waitTime, countryTradedWith, amountTraded);
 
         //Add sales to another country?
         //Click no

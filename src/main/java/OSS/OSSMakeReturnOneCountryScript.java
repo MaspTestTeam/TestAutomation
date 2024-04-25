@@ -1,22 +1,20 @@
 package OSS;
 
 import Components.ChromeDriverInit;
+import Components.OSSReturn;
 import Components.SignIn;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.io.FileHandler;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
+
 
 // ********************************************************************
 // THIS SCRIPT WILL MAKE RETURN TO A GIVEN COUNTRY FOR THE AMOUNT DESIRED
@@ -121,18 +119,8 @@ public class OSSMakeReturnOneCountryScript {
 
         // Which country did you sell to from Northern Ireland?
         // Check input is empty before typing in another value - this is filled if been completed before.
-        WebElement countrySoldToInput = driver.findElement(By.id("value"));
-        if ((countrySoldToInput.getAttribute("value").isEmpty()))
-        {
-            driver.findElement(By.id("value")).sendKeys(countryTradedWith);
-            if (demo) { Thread.sleep(waitTime); }
-            // Double click needed
-            driver.findElement(By.id("continue")).click();
-            driver.findElement(By.id("continue")).click();
-        }else {
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
+        OSSReturn ossReturn = new OSSReturn(); // Initialise the oss return component
+        ossReturn.ossDeclareTradeWithCountry(driver, demo, waitTime, countryTradedWith, amountTraded);
 
         // Which VAT rates did you charge?
         // Click just top value
@@ -207,7 +195,6 @@ public class OSSMakeReturnOneCountryScript {
         String result = "Demo Selected: " + demo + "\n";
         //Check if user wants screenshot before taking the screenshot of the final payment
         if (takeScreenShot){
-            Thread.sleep(3000); //give time for page to load
             // Scroll down to view more information on the screen
             // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
             ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)");

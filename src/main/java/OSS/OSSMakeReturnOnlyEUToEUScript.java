@@ -1,18 +1,16 @@
 package OSS;
 
 import Components.ChromeDriverInit;
+import Components.OSSReturn;
 import Components.SignIn;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.io.FileHandler;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -38,8 +36,8 @@ public class OSSMakeReturnOnlyEUToEUScript {
         boolean takeScreenShot = false; // If you want a screenshot of the completed return change this to true.
         String GGIDValue = "97 35 24 81 61 39"; // Replace with the GGId of the account you're using
         // The following are variables used to declare the trade between EU countries
-        String countrySellingFrom = "Finland";  // The EU country you are selling goods from
-        String countrySellingTo = "Croatia";  // The EU country you are selling goods to
+        String countrySellingFrom = "Greece";  // The EU country you are selling goods from
+        String countrySellingTo = "Austria";  // The EU country you are selling goods to
         String euTradeAmount = "500.00";  // Goods traded in pounds(£), remember the pence in the number (.00)
 
         // Run the selenium script
@@ -135,7 +133,8 @@ public class OSSMakeReturnOnlyEUToEUScript {
         driver.findElement(By.id("continue")).click();
 
         // DECLARE A TRADE FROM ONE EU COUNTRY TO ANOTHER
-        declareEUtoEUTrade(driver, demo, waitTime, countrySellingFrom, countrySellingTo, euTradeAmount);
+        OSSReturn ossReturn = new OSSReturn();
+        ossReturn.declareEUtoEUTrade(driver, demo, waitTime, countrySellingFrom, countrySellingTo, euTradeAmount);
 
         // Add sales from another EU country?
         // Click no
@@ -184,7 +183,6 @@ public class OSSMakeReturnOnlyEUToEUScript {
         String result = "Demo Selected: " + demo + "\n";
         //Check if user wants screenshot before taking the screenshot of the final payment
         if (takeScreenShot){
-            Thread.sleep(3000); //give time for page to load
             // Scroll down to view more information on the screen
             // if the payment reference doesn't scroll into view you can change the (x,y) values of the scrollBy function
             ((JavascriptExecutor) driver).executeScript("window.scrollBy(0,400)");
@@ -216,68 +214,5 @@ public class OSSMakeReturnOnlyEUToEUScript {
 
         // Return final result string
         return result;
-    }
-
-
-    //This function will execute the steps to declare a trade with a two EU countries(countrySellingFrom and countrySellingTo) for a given amount(amountTraded)
-    // It needs variables from the main script like demo and waitTime as well as access to the driver to continue the script.
-    private static void declareEUtoEUTrade(WebDriver driver, boolean demo, int waitTime, String countrySellingFrom, String countrySellingTo, String amountTraded) throws InterruptedException {
-        // Which EU country did you sell goods from?
-        WebElement countrySellFromInput = driver.findElement(By.id("value"));
-        // Check input is empty before typing in another value - this is filled if been completed before.
-        if ((countrySellFromInput.getAttribute("value").isEmpty()))
-        {
-            driver.findElement(By.id("value")).sendKeys(countrySellingFrom);
-            if (demo) { Thread.sleep(waitTime); }
-            // Double click needed
-            driver.findElement(By.id("continue")).click();
-            driver.findElement(By.id("continue")).click();
-        } else{
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
-
-        // Where did you sell to from XXXXXX? Pick any country except NI
-        WebElement countrySoldTo2Input = driver.findElement(By.id("value"));
-        // Check input is empty before typing in another value - this is filled if been completed before.
-        if ((countrySoldTo2Input.getAttribute("value").isEmpty()))
-        {
-            driver.findElement(By.id("value")).sendKeys(countrySellingTo);
-            if (demo) { Thread.sleep(waitTime); }
-            // Double click needed
-            driver.findElement(By.id("continue")).click();
-            driver.findElement(By.id("continue")).click();
-        } else {
-            if (demo) { Thread.sleep(waitTime); }
-            driver.findElement(By.id("continue")).click();
-        }
-
-        // Which VAT rates did you charge?
-        // Click top value
-        driver.findElement(By.id("value_0")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        //What were your sales at XX% rate excluding VAT?
-        driver.findElement(By.id("value_0")).sendKeys(amountTraded);
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // How much VAT did you charge on sales of £XXXXX at XX% VAT rate?
-        driver.findElement(By.id("value_0")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // Check your answers
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // Add sales from XXXXXX to another EU country?
-        if (demo) { Thread.sleep(waitTime); }
-        //Click no
-        driver.findElement(By.id("value-no")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        // Click continue
-        driver.findElement(By.id("continue")).click();
     }
 }
