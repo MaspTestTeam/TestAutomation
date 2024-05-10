@@ -176,12 +176,11 @@ public class BTACreationWithOutlook {
             driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/div[1]/div/div/div/div/div[2]/div[2]/div/div/form/div[3]/div[2]/div/div[1]/button")).click();
         }
         else {
-            driver.findElement(By.xpath("/html/body/div/form/div/div/div[2]/" +
-                    "[1]/div/div/div/div[2]/div/div[3]/div/div[2]/div/div[3]/div[2]/div/div/div[1]/input")).click();
+            driver.findElement(By.xpath("//*[@id=\"acceptButton\"]")).click();
         }
 
         //Wait for email to arrive
-        Thread.sleep(1500);
+        Thread.sleep(500);
         //Open email
         driver.findElement(By.xpath(
                 "/html/body/div[1]/div/div[2]/div/div[2]/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div/div/div/div/div/div/div[2]/div/div/div/div/div[2]/div[2]/div[2]"
