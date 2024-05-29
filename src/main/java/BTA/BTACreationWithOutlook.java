@@ -170,6 +170,7 @@ public class BTACreationWithOutlook {
         driver.findElement(By.id("idSIButton9")).click();
         //Stay signed in Click - NO
         //Check for one of the buttons, if it isn't there do the other one.
+        /*
         int elem=driver.findElements(By.xpath("/html/body/div[1]/div/div[2]/div[1]/div/div/div/div/div[2]/div[2]/div/div/form/div[3]/div[2]/div/div[1]/button")).size();
         if (elem==1){
             driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/div[1]/div/div/div/div/div[2]/div[2]/div/div/form/div[3]/div[2]/div/div[1]/button")).click();
@@ -177,7 +178,9 @@ public class BTACreationWithOutlook {
         else {
             driver.findElement(By.xpath("//*[@id=\"acceptButton\"]")).click();
         }
+        */
 
+        driver.findElement(By.xpath("//*[@id=\"acceptButton\"]")).click();
         //Wait for email to arrive
         Thread.sleep(500);
         //Open email

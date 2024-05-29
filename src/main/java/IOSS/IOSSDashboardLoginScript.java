@@ -22,8 +22,8 @@ public class IOSSDashboardLoginScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
-        String GGIDValue = "29 29 16 24 99 89"; // Replace with the GGId of the account you're using
-
+        String GGIDValue = "39 88 42 54 85 17"; // Replace with the GGId of the account you're using
+        //39 88 42 54 85 17   44 01 82 42 29 77
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue);
         // Print out the results/information after the selenium script has finished running
