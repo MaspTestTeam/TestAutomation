@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Select;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -30,6 +31,17 @@ public class CheckIfVRNLinkedToBTAScript {
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
         String VRN = "991122111"; // Replace with your VRN
+
+        //The filepath for unused VRNs
+        String filePath = "accounts/unused_VRNS.txt";
+        List<String> vrns = ReadAndParseVRNS.readAndParseVrn(filePath);
+
+        // Print out all the VRNS now in the List
+        for (String vrn : vrns){
+            System.out.println(vrn);
+        }
+
+        //TODO: Run script for each VRN
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, VRN);
@@ -117,8 +129,10 @@ public class CheckIfVRNLinkedToBTAScript {
         // Check the results
         String results = driver.findElement(By.xpath("//*[@id=\"main-content\"]/div/div/div/div/p")).getText();
         if (Objects.equals(results, "204 - NoContent")){
+            //TODO: Write it to the end of unused_VRNS that hold valid VRNS once checked.
             return "\n RESULTS\n The "+vrn+" has no BTA linked to it.";
         } else{
+            //TODO: Continue the loop and dont write it to file.
             return "\n RESULTS\n The "+vrn+" has a BTA linked to it and the VRN is invalid.";
         }
     }
