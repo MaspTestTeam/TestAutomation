@@ -25,7 +25,7 @@ import java.util.Objects;
 // ENSURE OUTLOOK INBOX IS EMPTY BEFORE RUNNING
 // SCRIPT WILL THEN MAKE THE BTA ACCOUNT LINKED TO THE GG ACCOUNT AS LONG
 // AS A VALID vrn AND LINKING BP IS ADDED TO THE SCRIPT ON CREATION
-// tO CALL THE SCRIPT USE THE  MAIN FUNCTION AND PUT IN THE VARIABLES NEEDED
+// tO CALL THE SCRIPT USE THE MAIN FUNCTION AND PUT IN THE VARIABLES NEEDED
 // DEMO BEING TRUE WILL SLOW THE AUTOMATION DOWN TO SEE WHAT'S HAPPENING.
 // ******************************************************************
 public class BTACreationWithOutlook {
@@ -35,8 +35,8 @@ public class BTACreationWithOutlook {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String VRNValue = "888650171"; // Replace with your VRN value
-        String BPValue = "100381967";   //Replace with your BP value
+        String VRNValue = "904526803"; // Replace with your VRN value
+        String BPValue = "100377806";   //Replace with your BP value
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(VRNValue, BPValue, demoSelected);
