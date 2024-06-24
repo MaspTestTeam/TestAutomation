@@ -38,14 +38,13 @@ public class CheckUnusedVRNSList {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String VRN = "991122111"; // Replace with your VRN
 
         //The filepath for unused VRNs
         String filePath = "accounts/unused_VRNS.txt";
         List<String> bpAndVrn = ReadAndParseVRNS.readAndParseVrn(filePath);
 
         // Run the selenium script
-        String result = seleniumScript.executeSeleniumScript(demoSelected, VRN, bpAndVrn);
+        String result = seleniumScript.executeSeleniumScript(demoSelected, bpAndVrn);
         //Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
@@ -54,7 +53,7 @@ public class CheckUnusedVRNSList {
     //***************************************************************
     //                 CHECK IF ACCOUNT IS LINKED
     //***************************************************************
-    public String executeSeleniumScript(boolean demo,  String vrn, List<String> vrnList) throws InterruptedException, IOException {
+    public String executeSeleniumScript(boolean demo, List<String> vrnList) throws InterruptedException, IOException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
         //***************************************************************
