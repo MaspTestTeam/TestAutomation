@@ -5,16 +5,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ReadAndParseVRNS {
     public static void main(String[] args) {
+        //The filepath for unused VRNs
+        String filePath = "accounts/unused_VRNS.txt";
+        List<String> bpAndVrn = ReadAndParseVRNS.readAndParseVrn(filePath);
     }
 
     public static List<String> readAndParseVrn(String filepath){
-        // Variable array to hold the VRNS
-        List<String> VRNS = new ArrayList<>();
-
+        // Variable array to hold the bp+vrn
+        List<String> BpAndVrn = new ArrayList<>();
 
         //Buffer for reading the file
         try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
@@ -26,13 +29,12 @@ public class ReadAndParseVRNS {
                 // Split the line on whitespace
                 String[] values = line.split(" ");
                 // Always take the 5th value as the VRN
-                VRNS.add(values[4].trim());
+                BpAndVrn.add(values[0].trim() +","+ values[4].trim());
             }
         } catch (IOException e) {
             System.out.println();
         }
-
-        return VRNS;
+        return BpAndVrn;
     }
 }
 

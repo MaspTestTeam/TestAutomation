@@ -1,4 +1,4 @@
-    BP         VRN       FoundAt  Used
+    BP         VRN       FoundAt   Used     valid
 100390199    888666247   18/6/24   true
 100377806    904526803   18/6/24   true
 100373406    904521933   19/6/24   false

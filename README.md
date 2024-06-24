@@ -26,6 +26,11 @@ Guides for the above prerequisites can be emailed out or found in the sharepoint
 
 
 ## Using the scripts
+### Checking VRNS
+There are two helper scripts to use if you want to check your VRN is attached to a Gov gateway account already.(This isn't checked in SAP creation).
+1. The first script 'CheckIfVRNLinkedToBTAScript' will check an individual VRN and will return true if the VRN can be used to create a BTA account afterward.
+2. The second script will cycle through each line of the unused_VRNs.txt file and check if each VRN is valid. If it is then the VRN and BP details will be written to the file valid_VRNS.txt.
+
 **Note:** All scripts follow the same structure of main() that calls executeSeleniumScript() function. The main() is where you will input any variables that change. 
 ### BTA Creation
 1. Open the BTACreationWithOutlook file and change the values of the VRN and BP for the account you are going to make.
