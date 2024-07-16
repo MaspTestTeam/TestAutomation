@@ -35,9 +35,9 @@ public class OSSRegistrationScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed reg change this to true.
-        String GGIDValue = "35 98 20 65 95 76"; // Replace with the GGId of the account you're using
-        String VRNValue = "904526803"; // Use the same VRN used in previous script
-        String bpId = "100377806";  // bpID for the account created linked to vrn
+        String GGIDValue = "40 26 71 06 36 99"; // Replace with the GGId of the account you're using
+        String VRNValue = "904528110"; // Use the same VRN used in previous script
+        String bpId = "100381247";  // bpID for the account created linked to vrn
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, takeScreenShot, GGIDValue, VRNValue, bpId);
