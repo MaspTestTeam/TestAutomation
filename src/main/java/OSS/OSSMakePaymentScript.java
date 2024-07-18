@@ -38,7 +38,7 @@ public class OSSMakePaymentScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
-        String GGIDValue = "75 46 24 97 58 71"; // Replace with the GGId of the account you're using
+        String GGIDValue = "67 05 95 02 23 97"; // Replace with the GGId of the account you're using
         int percentPayment = 100; // Integer only, no decimals. 100 -> 100% = full payment
 
         // Run the selenium script
@@ -111,6 +111,7 @@ public class OSSMakePaymentScript {
         //USE HYPERLINK
         driver.findElement(By.id("oss-make-payment")).click();
 
+        /*
         // If there are multiple payments due then check this page loads, if it does click top value
         WebElement headerCheck = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/form/div/fieldset/legend/h1"));
         if (Objects.equals(headerCheck.getText(), "Which VAT period do you want to pay?")){
@@ -119,12 +120,14 @@ public class OSSMakePaymentScript {
             // Click continue
             driver.findElement(By.id("continue")).click();
         }
+        */
+
 
         // Get the outstanding balance
         String[] amountDue = driver.findElement(
                 By.xpath("/html/body/div[2]/main/div/div/div[1]/form/div/fieldset/div/div/div[1]/label")).getText().trim().split("£", 2);
         // Find the amount to pay based on the percentage input by the user
-        Double amountToPay = (percentPayment/100d)*Double.parseDouble(amountDue[1]);
+        Double amountToPay = (percentPayment/100d)*Double.parseDouble(amountDue[1].replace(",", ""));
         if (demo) { Thread.sleep(waitTime); }
         //Format the string so that the payment is £xx.xx as a string to input
         String amountToPayString = df.format(amountToPay);

@@ -1,6 +1,7 @@
 package IOSS;
 
 import Components.ChromeDriverInit;
+import Components.IOSSStubSignIn;
 import Components.SignIn;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
@@ -21,23 +22,25 @@ public class IOSSDashboardLoginScript {
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
+        boolean stubLogin = true;     // Set to true if normal login isnt working
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
-        String GGIDValue = "39 88 42 54 85 17"; // Replace with the GGId of the account you're using
-        //39 88 42 54 85 17   44 01 82 42 29 77
+        String GGIDValue = "52 08 20 29 15 81"; // Replace with the GGId of the account you're using
+        String vrn = "888650171";   // VRN for account needed to run Stub login - not needed if stub login isnt needed
+        String iossId = "IM9000004490";  // IOSS ID for stub log in, not needed if stub login isnt needed.
+
         // Run the selenium script
-        String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue);
+        String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, vrn, iossId, stubLogin);
         // Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
 
     // The automation script that will execute the steps via selenium
-    public String executeSeleniumScript(boolean demo, String govGatewayID) throws IOException, InterruptedException {
+    public String executeSeleniumScript(boolean demo, String govGatewayID, String vrn, String iossId, boolean stubLogin) throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
         //***************************************************************
         // demo=true to slow down the automation to waitTime in ms between steps.
         int waitTime = 1000;
-
 
         //***************************************************************
         //              VARIABLES & .env LOADED & TIMER
@@ -47,6 +50,7 @@ public class IOSSDashboardLoginScript {
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayBTAStartPoint = dotenv.get("RETURNS_URL"); // Start point to LOG INTO BTA
+        String govGatewayStubLoginURL = dotenv.get("STUBS_LOGIN_URL"); // Start point to LOG INTO BTA
         String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD"); //GG account password used to create and log in
         String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");   //Code used for authentication app
 
@@ -61,22 +65,38 @@ public class IOSSDashboardLoginScript {
         //***************************************************************
         //******************* AUTOMATION START POINT ********************
         //***************************************************************
-        //                      OPEN GOV GATEWAY
-        //***************************************************************
-        // Open start point URL but log in this time.
-        driver.get(govGatewayBTAStartPoint);
 
-        //***************************************************************
-        //                      SIGN IN
-        //***************************************************************
-        SignIn signIn = new SignIn(); // Initialise the sign in component
-        signIn.signInAutomationSteps(driver, govGatewayID, govGatewayPassword, authenticationCode);
+        if (!stubLogin) {
+            //***************************************************************
+            //                      OPEN GOV GATEWAY
+            //***************************************************************
+            // Open start point URL but log in this time.
+            driver.get(govGatewayBTAStartPoint);
 
-        //***************************************************************
-        //                      VIEW IOSS ACCOUNT
-        //***************************************************************
-        //USE HYPERLINK
-        driver.findElement(By.id("ioss-view-account")).click();
+            //***************************************************************
+            //                      SIGN IN
+            //***************************************************************
+            SignIn signIn = new SignIn(); // Initialise the sign in component
+            signIn.signInAutomationSteps(driver, govGatewayID, govGatewayPassword, authenticationCode);
+
+            //***************************************************************
+            //                      VIEW IOSS ACCOUNT
+            //***************************************************************
+            //USE HYPERLINK
+            driver.findElement(By.id("ioss-view-account")).click();
+        } else {
+            //***************************************************************
+            //                      OPEN GOV GATEWAY
+            //***************************************************************
+            // Open start point URL for stub login.
+            driver.get(govGatewayStubLoginURL);
+
+            //***************************************************************
+            //                      SIGN IN WITH STUBS
+            //***************************************************************
+            IOSSStubSignIn iossStubSignIn = new IOSSStubSignIn();
+            iossStubSignIn.signInWithStubs(driver, vrn, iossId);
+        }
 
         // Return the input and results string
         String result = "Demo Selected: " + demo + "\n";
