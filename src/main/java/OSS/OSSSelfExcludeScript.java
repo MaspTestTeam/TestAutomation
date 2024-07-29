@@ -8,8 +8,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Objects;
 
 // ******************************************************************
@@ -35,7 +33,6 @@ public class OSSSelfExcludeScript {
         // If you are joining another country you need the country Tax Code and name
         String newCountry = "Austria";
         String newCountryTaxCode = "ATU12345678";
-
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, reasonCode, newCountry, newCountryTaxCode);
