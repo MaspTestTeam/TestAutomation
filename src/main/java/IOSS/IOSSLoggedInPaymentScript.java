@@ -38,7 +38,7 @@ public class IOSSLoggedInPaymentScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed payment change this to true.
-        String GGIDValue = "29 29 16 24 99 89"; // Replace with the GGId of the account you're using
+        String GGIDValue = "70 37 17 77 61 20"; // Replace with the GGId of the account you're using
         int percentPayment = 100; // Integer only, no decimals. 100 -> 100% = full payment
 
         // Run the selenium script
@@ -111,7 +111,7 @@ public class IOSSLoggedInPaymentScript {
         driver.findElement(By.id("ioss-make-payment")).click();
 
         // If there are multiple outstanding months due pick the bottom one, this will be the most outstanding
-        WebElement headerCheck = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/form/div/fieldset/legend/h1"));
+        WebElement headerCheck = driver.findElement(By.xpath("/html/body/div[2]/main/div/div/div[1]/form/div/fieldset/legend/h1"));
         if (Objects.equals(headerCheck.getText(), "Which month would you like to make a payment for?")){
             // Click bottom value
             driver.findElement(By.id("value_1")).click(); //value_0 if you want the top value

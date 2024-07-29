@@ -1,6 +1,7 @@
 package IOSS;
 
 import Components.ChromeDriverInit;
+import Components.IOSSStubSignIn;
 import Components.SignIn;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
@@ -36,17 +37,22 @@ public class IOSSMakeNilReturnScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed return change this to true.
-        String GGIDValue = "85 48 22 53 42 71"; // Replace with the GGId of the account you're using
+        String GGIDValue = "70 37 17 77 61 20"; // Replace with the GGId of the account you're using
+        // ONLY NEED TO CHANGE IF NORMAL LOG IN NOT WORKING
+        boolean stubLogin = false;     // Set to true if normal login isn't working
+        String vrn = "991122105";   // VRN for account needed to run Stub login - not needed if stub login isn't needed
+        String iossId = "IM9000005802";  // IOSS ID for stub log in, not needed if stub login isn't needed.
 
         // Run the selenium script
-        String result = seleniumScript.executeSeleniumScript(demoSelected, takeScreenShot, GGIDValue);
+        String result = seleniumScript.executeSeleniumScript(demoSelected, takeScreenShot, GGIDValue, vrn, iossId, stubLogin);
         // Print out the results/information after the selenium script has finished running
         System.out.println(result);
     }
 
 
     // The automation script that will execute the steps via selenium
-    public String executeSeleniumScript(boolean demo, boolean takeScreenShot, String govGatewayID) throws IOException, InterruptedException {
+    public String executeSeleniumScript(boolean demo, boolean takeScreenShot, String govGatewayID, String vrn, String iossId, boolean stubLogin)
+            throws IOException, InterruptedException {
         //***************************************************************
         //                  DEMO VARIABLE FOR SHOWCASE
         //***************************************************************
@@ -62,6 +68,7 @@ public class IOSSMakeNilReturnScript {
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayBTAStartPoint = dotenv.get("RETURNS_URL"); // Start point to LOG INTO BTA
+        String govGatewayStubLoginURL = dotenv.get("STUBS_LOGIN_URL"); // Start point to log in with stubs
         String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD"); //GG account password used to create and log in
         String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");   //Code used for authentication app
 
@@ -88,20 +95,46 @@ public class IOSSMakeNilReturnScript {
         //***************************************************************
         //******************* AUTOMATION START POINT ********************
         //***************************************************************
-        //                      OPEN GOV GATEWAY
-        //***************************************************************
-        // Open start point URL but log in this time.
-        driver.get(govGatewayBTAStartPoint);
+
+        if (!stubLogin) {
+            //***************************************************************
+            //                      OPEN GOV GATEWAY
+            //***************************************************************
+            // Open start point URL but log in this time.
+            driver.get(govGatewayBTAStartPoint);
+
+            //***************************************************************
+            //                      SIGN IN
+            //***************************************************************
+            SignIn signIn = new SignIn(); // Initialise the sign in component
+            signIn.signInAutomationSteps(driver, govGatewayID, govGatewayPassword, authenticationCode);
+
+            //***************************************************************
+            //                      CLICK IOSS RETURN
+            //***************************************************************
+            // IOSS vat click start your return link
+            driver.findElement(By.id("ioss-start-return")).click();
+            if (demo) { Thread.sleep(waitTime); }
+        } else {
+            //***************************************************************
+            //                      OPEN GOV GATEWAY
+            //***************************************************************
+            // Open start point URL for stub login.
+            driver.get(govGatewayStubLoginURL);
+
+            //***************************************************************
+            //                      SIGN IN WITH STUBS
+            //***************************************************************
+            IOSSStubSignIn iossStubSignIn = new IOSSStubSignIn();
+            iossStubSignIn.signInWithStubs(driver, vrn, iossId);
+
+            //Click outstanding return link in dashboard to begin
+            driver.findElement(By.id("start-your-return")).click();
+        }
 
         //***************************************************************
-        //                      SIGN IN
+        //                      COMPLETE THE RETURN
         //***************************************************************
-        SignIn signIn = new SignIn(); // Initialise the sign in component
-        signIn.signInAutomationSteps(driver, govGatewayID, govGatewayPassword, authenticationCode);
-
-        // IOSS vat click start your return link
-        driver.findElement(By.id("ioss-start-return")).click();
-        if (demo) { Thread.sleep(waitTime); }
 
         // Do you want to start your return?
         // Click yes

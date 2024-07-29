@@ -34,7 +34,7 @@ public class OSSMakeReturnOneCountryScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed return change this to true.
-        String GGIDValue = "97 35 24 81 61 39"; // Replace with the GGId of the account you're using
+        String GGIDValue = "67 05 95 02 23 97"; // Replace with the GGId of the account you're using
         String countryTradedWith = "Portugal";   // Country you are declaring trading with (make sure the first letter is capitalised)
         String amountTraded = "1000.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
 

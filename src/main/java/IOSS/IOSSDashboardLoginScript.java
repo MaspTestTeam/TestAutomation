@@ -22,11 +22,12 @@ public class IOSSDashboardLoginScript {
         //***************************************************************
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
-        boolean stubLogin = true;     // Set to true if normal login isnt working
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
-        String GGIDValue = "52 08 20 29 15 81"; // Replace with the GGId of the account you're using
-        String vrn = "888650171";   // VRN for account needed to run Stub login - not needed if stub login isnt needed
-        String iossId = "IM9000004490";  // IOSS ID for stub log in, not needed if stub login isnt needed.
+        String GGIDValue = "70 37 17 77 61 20"; // Replace with the GGId of the account you're using
+        // ONLY NEED TO CHANGE IF NORMAL LOG IN NOT WORKING
+        boolean stubLogin = false;     // Set to true if normal login isn't working
+        String vrn = "991122105";   // VRN for account needed to run Stub login - not needed if stub login isn't needed
+        String iossId = "IM9000005802";  // IOSS ID for stub log in, not needed if stub login isn't needed.
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, vrn, iossId, stubLogin);
@@ -50,7 +51,7 @@ public class IOSSDashboardLoginScript {
         // Variables loaded in from .env
         Dotenv dotenv = Dotenv.load(); //Needed for .env loading
         String govGatewayBTAStartPoint = dotenv.get("RETURNS_URL"); // Start point to LOG INTO BTA
-        String govGatewayStubLoginURL = dotenv.get("STUBS_LOGIN_URL"); // Start point to LOG INTO BTA
+        String govGatewayStubLoginURL = dotenv.get("STUBS_LOGIN_URL"); // Start point to log in with stubs
         String govGatewayPassword = dotenv.get("GOV_GATEWAY_PASSWORD"); //GG account password used to create and log in
         String authenticationCode = dotenv.get("AUTHENTICATOR_CODE");   //Code used for authentication app
 
