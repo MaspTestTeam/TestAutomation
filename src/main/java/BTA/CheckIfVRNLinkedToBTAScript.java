@@ -78,6 +78,8 @@ public class CheckIfVRNLinkedToBTAScript {
         //***************************************************************
         //                      SIGN IN
         //***************************************************************
+        driver.findElement(By.id("scp")).click();
+        driver.findElement(By.id("continue")).click();
         SignIn signIn = new SignIn(); // Initialise the sign in component
         //We can use any GG-ID
         signIn.signInAutomationSteps(driver, "54 43 66 98 39 15", govGatewayPassword, authenticationCode);
