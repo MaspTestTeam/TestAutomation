@@ -25,7 +25,7 @@ public class IOSSDashboardLoginScript {
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         String GGIDValue = "70 37 17 77 61 20"; // Replace with the GGId of the account you're using
         // ONLY NEED TO CHANGE IF NORMAL LOG IN NOT WORKING
-        boolean stubLogin = false;     // Set to true if normal login isn't working
+        boolean stubLogin = true;     // Set to true if normal login isn't working
         String vrn = "991122105";   // VRN for account needed to run Stub login - not needed if stub login isn't needed
         String iossId = "IM9000005802";  // IOSS ID for stub log in, not needed if stub login isn't needed.
 

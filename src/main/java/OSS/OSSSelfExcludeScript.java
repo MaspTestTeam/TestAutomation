@@ -30,9 +30,10 @@ public class OSSSelfExcludeScript {
         String GGIDValue = "40 26 71 06 36 99"; // Replace with your value for GGID
         // Replace the reasonCode you are testing the self exclusion with
         String reasonCode = "6";
-        // If you are joining another country you need the country Tax Code and name
+        // If you are joining another country you need the country Tax Code and name - reason code 6
         String newCountry = "Austria";
-        String newCountryTaxCode = "ATU12345678";
+        //String newCountryTaxCode = "EL123456789"; //Greece example tax code
+        String newCountryTaxCode = "ATU12345678"; // Austria example tax code
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue, reasonCode, newCountry, newCountryTaxCode);
@@ -92,6 +93,7 @@ public class OSSSelfExcludeScript {
         // Click leave the service hyperlink
         driver.findElement(By.id("leave-this-service")).click();
 
+        SuiteUtils utils = new SuiteUtils();
         //***************************************************************
         //                      SELF EXCLUDE FORMS
         //***************************************************************
@@ -102,7 +104,6 @@ public class OSSSelfExcludeScript {
             driver.findElement(By.id("continue")).click();
 
             //Which country is your business moving to?
-            SuiteUtils utils = new SuiteUtils();
             utils.preventInputDuplication("value", newCountry, driver);
             //Click continue
             driver.findElement(By.id("continue")).click();
@@ -144,9 +145,9 @@ public class OSSSelfExcludeScript {
                 String currentDay =Integer.toString(LocalDate.now().getDayOfMonth());
                 String currentMonth =Integer.toString(LocalDate.now().getMonthValue());
                 String currentYear =Integer.toString(LocalDate.now().getYear());
-                driver.findElement(By.id("value.day")).sendKeys(currentDay);
-                driver.findElement(By.id("value.month")).sendKeys(currentMonth);
-                driver.findElement(By.id("value.year")).sendKeys(currentYear);
+                utils.preventInputDuplication("value.day", currentDay, driver);
+                utils.preventInputDuplication("value.month", currentMonth, driver);
+                utils.preventInputDuplication("value.year", currentYear, driver);
                 //Click continue
                 driver.findElement(By.id("continue")).click();
 

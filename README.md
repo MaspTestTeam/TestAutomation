@@ -14,6 +14,7 @@ Guides for the above prerequisites can be emailed out or found in the sharepoint
 2. Press clone and wait for the build, this may take a few minutes to download and install all the relevant packages.
 3. To find all the automation scripts navigate into the main directory then into src/main/java.
 ![Step 3](/assets/where_the_scripts_are.PNG)
+4. For more information a full automation suite guide can be found in the automation sharepoint. 
 
 
 ## Setting up the project
@@ -94,7 +95,7 @@ Once the project is set up you can create accounts you are free to use the proje
 The scripts are step by step so if something gets stuck it should be clear to find where and how to change any options.
 
 Example of some of the steps for IOSS
-![Exampe Script](/assets/script_example.PNG)
+![Example Script](/assets/script_example.PNG)
 If you wanted to change the script to declare items 135 or more, then you can inspect the website pae and find the id of the button you want to click instead and click that instead.
 
 
