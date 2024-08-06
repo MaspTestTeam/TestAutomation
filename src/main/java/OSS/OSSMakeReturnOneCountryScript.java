@@ -34,7 +34,7 @@ public class OSSMakeReturnOneCountryScript {
         //***************************************************************
         boolean demoSelected = false; // This will slow down the script if set to true, so you can see what is happening
         boolean takeScreenShot = false; // If you want a screenshot of the completed return change this to true.
-        String GGIDValue = "67 05 95 02 23 97"; // Replace with the GGId of the account you're using
+        String GGIDValue = "16 38 48 91 19 80"; // Replace with the GGId of the account you're using
         String countryTradedWith = "Portugal";   // Country you are declaring trading with (make sure the first letter is capitalised)
         String amountTraded = "1000.00";   // Goods traded in pounds(£), remember the pence in the number (.00)
 
@@ -122,26 +122,6 @@ public class OSSMakeReturnOneCountryScript {
         OSSReturn ossReturn = new OSSReturn(); // Initialise the oss return component
         ossReturn.ossDeclareTradeWithCountry(driver, demo, waitTime, countryTradedWith, amountTraded);
 
-        // Which VAT rates did you charge?
-        // Click just top value
-        driver.findElement(By.id("value_0")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // What were your sales at xx% rate excluding VAT?
-        driver.findElement(By.id("value")).sendKeys(amountTraded);
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // How much VAT did you charge on sales of £5,000 at xx% VAT rate?
-        driver.findElement(By.id("value_0")).click();
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
-        // Check your answers
-        if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
-
         // Add sales from Northern Ireland to another EU country?
         // Click no
         driver.findElement(By.id("value-no")).click();
@@ -166,7 +146,7 @@ public class OSSMakeReturnOneCountryScript {
 
         // Check your answers and click submit
         if (demo) { Thread.sleep(waitTime); }
-        driver.findElement(By.id("continue")).click();
+        //driver.findElement(By.id("continue")).click();
 
 
         //***************************************************************
