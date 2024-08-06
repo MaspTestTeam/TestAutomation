@@ -21,7 +21,7 @@ public class OSSDashboardLoginScript {
         //                 VARIABLES TO RUN SCRIPT MANUALLY
         //***************************************************************
         boolean demoSelected = false; // Replace with your value
-        String GGIDValue = "67 05 95 02 23 97"; // Replace with your value for GGID
+        String GGIDValue = "20 34 85 11 14 83"; // Replace with your value for GGID
 
         // Run the selenium script
         String result = seleniumScript.executeSeleniumScript(demoSelected, GGIDValue);
