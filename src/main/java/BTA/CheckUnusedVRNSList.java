@@ -103,6 +103,7 @@ public class CheckUnusedVRNSList {
         //                      SIGN IN
         //***************************************************************
         driver.findElement(By.id("scp")).click();
+        Thread.sleep(3000);
         driver.findElement(By.id("continue")).click();
         SignIn signIn = new SignIn(); // Initialise the sign in component
         //We can use any GG-ID
