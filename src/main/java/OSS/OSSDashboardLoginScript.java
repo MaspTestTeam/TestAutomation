@@ -70,7 +70,7 @@ public class OSSDashboardLoginScript {
         //***************************************************************
         SignIn signIn = new SignIn(); // Initialise the sign in component
         signIn.signInAutomationSteps(driver, govGatewayID, govGatewayPassword, authenticationCode);
-
+        if (demo) { Thread.sleep(waitTime); }
         //***************************************************************
         //                      VIEW OSS ACCOUNT
         //***************************************************************
