@@ -6,6 +6,8 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -76,6 +78,12 @@ public class OSSDashboardLoginScript {
         //***************************************************************
         //USE HYPERLINK
         driver.findElement(By.id("oss-view-account")).click();
+
+        // Clear cookies banner
+        WebDriverWait driverWaitTime = new WebDriverWait(driver, Duration.ofSeconds(5));
+        driverWaitTime.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div/div[2]/button[1]")));
+        driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/button[1]")).click();
+        driver.findElement(By.xpath("/html/body/div[1]/div/div[2]/button")).click();
 
         // Return the input and results string
         String result = "Demo Selected: " + demo + "\n";
